@@ -10,8 +10,8 @@ public class PlayerChat {
     @Subscribe
     public void onChat(PlayerChatEvent event) {
         String mess = Texts.toPlain(event.getMessage());
-        String formatedMessage = ConfigLoader.formatMes.replace("%PLAYER%", event.getPlayer().getName())
-                .replace("%MES%", mess.substring(mess.indexOf(" ") + 1)).replaceAll("&([0-9a-r])", "\u00A7$1");
+        String formatedMessage = Texts.replaceCodes(ConfigLoader.formatMes.replace("%PLAYER%", event.getPlayer().getName())
+                .replace("%MES%", mess.substring(mess.indexOf(" ") + 1)), '&');
         event.setMessage(Texts.of(formatedMessage));
     }
 }

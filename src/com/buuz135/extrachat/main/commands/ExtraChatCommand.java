@@ -23,22 +23,27 @@ public class ExtraChatCommand implements CommandCallable {
         if (testPermission(source)) {
             String[] args = arguments.split(" ");
             if (args.length > 0) {
-                if (args[0].equals("config")) {
+                if (args[0].equalsIgnoreCase("config")) {
                     if (args.length > 1) {
-                        if (args[1].equals("reload") && args.length == 2) {
+                        if (args[1].equalsIgnoreCase("reload") && args.length == 2) {
                             ConfigLoader.loadConfig();
-                            source.sendMessage(Texts.of("Configuration reloaded").builder().color(TextColors.GREEN).build());
-                        } else if (args[1].equals("format")) {
+                            source.sendMessage(Texts.of("Configuration reloaded").builder()
+                                    .color(TextColors.GREEN).build());
+                        } else if (args[1].equalsIgnoreCase("format")) {
                             if (args.length == 2) {
-                                source.sendMessage(Texts.of("Please, introduce a valid format.").builder().color(TextColors.DARK_RED).build());
+                                source.sendMessage(Texts.of("Please, introduce a valid format.").builder()
+                                        .color(TextColors.DARK_RED).build());
                             } else {
                                 ConfigLoader.saveConfig(arguments.substring(arguments.indexOf("format") + 7));
-                                source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN).build());
+                                source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN)
+                                        .build());
                             }
                         }
                     } else {
                         source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
                     }
+                } else if (args[0].equalsIgnoreCase("tagcreate")) {
+
                 } else {
                     source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
                 }

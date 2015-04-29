@@ -1,6 +1,8 @@
 package com.buuz135.extrachat.main.commands;
 
+import com.buuz135.extrachat.main.ExtraChat;
 import com.buuz135.extrachat.main.config.ConfigLoader;
+import com.buuz135.extrachat.main.config.JsonLoader;
 import com.google.common.base.Optional;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
@@ -15,7 +17,7 @@ import java.util.List;
 
 
 public class ExtraChatCommand implements CommandCallable {
-    private String usage = "USAGE: /ec <config> <reload|format>";
+    private String usage = "USAGE: /ec <help|reload|formatmes|tagadd|tagremove> <format|tag|player> <player>";
     private Object description = "Main command for ExtraChat";
 
     @Override
@@ -23,27 +25,57 @@ public class ExtraChatCommand implements CommandCallable {
         if (testPermission(source)) {
             String[] args = arguments.split(" ");
             if (args.length > 0) {
-                if (args[0].equals("config")) {
-                    if (args.length > 1) {
-                        if (args[1].equals("reload") && args.length == 2) {
-                            ConfigLoader.loadConfig();
-                            source.sendMessage(Texts.of("Configuration reloaded").builder().color(TextColors.GREEN).build());
-                        } else if (args[1].equals("format")) {
-                            if (args.length == 2) {
-                                source.sendMessage(Texts.of("Please, introduce a valid format.").builder().color(TextColors.DARK_RED).build());
-                            } else {
-                                ConfigLoader.saveConfig(arguments.substring(arguments.indexOf("format") + 7));
-                                source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN).build());
-                            }
+                if (args[0].equalsIgnoreCase("help") && args.length == 1) {
+                    sendHelpMessage(source);
+                } else if (args[0].equalsIgnoreCase("reload") && args.length == 1) {
+                    ConfigLoader.loadConfig();
+                    source.sendMessage(Texts.of("Configuration reloaded.").builder()
+                            .color(TextColors.GREEN).build());
+                } else if (args[0].equalsIgnoreCase("formatmes")) {
+                    if (args.length == 1) {
+                        source.sendMessage(Texts.of("Please, introduce a valid format.").builder()
+                                .color(TextColors.DARK_RED).build());
+                    } else {
+                        ConfigLoader.saveConfig(arguments.substring(arguments.indexOf("formatMes") + 11), "formatMes");
+                        source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN)
+                                .build());
+                    }
+                } else if (args[0].equalsIgnoreCase("tagadd")) {
+                    if (args.length == 3) {
+                        if (ExtraChat.game.getServer().getPlayer(args[2]).isPresent()) {
+                            JsonLoader.insertTag(args[1], args[2], ExtraChat.game.getServer().getPlayer(args[2]).get().getUniqueId().toString());
+                            source.sendMessage(Texts.of("Added player " + args[2] + " to the tag " + args[1] + ".").builder().color(TextColors.GREEN)
+                                    .build());
+                        } else {
+                            source.sendMessage(Texts.of("That player its not online.").builder().color(TextColors.RED).build());
                         }
                     } else {
                         source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
                     }
+                } else if (args[0].equalsIgnoreCase("tagremove")) {
+                    if (args.length == 2) {
+                        if (ExtraChat.game.getServer().getPlayer(args[1]).isPresent()) {
+                            JsonLoader.removeTag(ExtraChat.game.getServer().getPlayer(args[1]).get().getUniqueId().toString());
+                            source.sendMessage(Texts.of("Removed tag from the player " + args[1] + ".").builder().color(TextColors.GREEN)
+                                    .build());
+                        } else {
+                            source.sendMessage(Texts.of("That player its not online.").builder().color(TextColors.RED).build());
+                        }
+                    } else {
+                        source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
+                    }
+                } else if (args[0].equalsIgnoreCase("formatTag")) {
+                    if (args.length == 1) {
+                        source.sendMessage(Texts.of("Please, introduce a valid format.").builder()
+                                .color(TextColors.DARK_RED).build());
+                    } else {
+                        ConfigLoader.saveConfig(arguments.substring(arguments.indexOf("formatTag") + 11), "formatTag");
+                        source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN)
+                                .build());
+                    }
                 } else {
-                    source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
+                    sendHelpMessage(source);
                 }
-            } else {
-                source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
             }
         } else {
             source.sendMessage(Texts.of("You don't have permission to use the command.").builder().color(TextColors.DARK_RED).build());
@@ -54,9 +86,12 @@ public class ExtraChatCommand implements CommandCallable {
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
         List<String> suggestion = new ArrayList<String>();
-        suggestion.add("config");
-        suggestion.add("config format");
-        suggestion.add("config reload");
+        suggestion.add("reload");
+        suggestion.add("formatmes");
+        suggestion.add("tagadd");
+        suggestion.add("help");
+        suggestion.add("formattag");
+        suggestion.add("tagremove");
         return suggestion;
     }
 
@@ -78,5 +113,26 @@ public class ExtraChatCommand implements CommandCallable {
     @Override
     public Text getUsage(CommandSource source) {
         return Texts.of(usage);
+    }
+
+    private void sendHelpMessage(CommandSource source) {
+        source.sendMessage(Texts.of("******************").builder().color(TextColors.DARK_AQUA)
+                .append(Texts.of(" ExtraChat Commands ").builder().color(TextColors.BLUE).build())
+                .append(Texts.of("******************").builder().color(TextColors.DARK_AQUA).build()).build());
+        source.sendMessage(Texts.of("/ec reload").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
+                .builder().color(TextColors.GRAY).build()).append(Texts.of("Reloads the configuration file.")
+                .builder().color(TextColors.GOLD).build()).build());
+        source.sendMessage(Texts.of("/ec formatmes <format>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
+                .builder().color(TextColors.GRAY).build()).append(Texts.of("Saves the message format.")
+                .builder().color(TextColors.GOLD).build()).build());
+        source.sendMessage(Texts.of("/ec taggadd <tag> <player>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
+                .builder().color(TextColors.GRAY).build()).append(Texts.of("Adds the player to the tag removing the current tag.")
+                .builder().color(TextColors.GOLD).build()).build());
+        source.sendMessage(Texts.of("/ec formattag <format>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
+                .builder().color(TextColors.GRAY).build()).append(Texts.of("Saves the tag format.")
+                .builder().color(TextColors.GOLD).build()).build());
+        source.sendMessage(Texts.of("/ec tagremove <player>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
+                .builder().color(TextColors.GRAY).build()).append(Texts.of("Removes the current tag form the player.")
+                .builder().color(TextColors.GOLD).build()).build());
     }
 }

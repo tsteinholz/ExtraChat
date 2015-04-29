@@ -2,6 +2,7 @@ package com.buuz135.extrachat.main;
 
 import com.buuz135.extrachat.main.commands.ExtraChatCommand;
 import com.buuz135.extrachat.main.config.ConfigLoader;
+import com.buuz135.extrachat.main.config.JsonLoader;
 import com.buuz135.extrachat.main.events.PlayerChat;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -29,6 +30,7 @@ public class ExtraChat {
     @Subscribe
     public void init(InitializationEvent event) {
         ConfigLoader.initConfiguration();
+        JsonLoader.initTagJson();
         event.getGame().getEventManager().register(pluginContainer.getInstance(), new PlayerChat());
         event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new ExtraChatCommand(), "ec");
     }

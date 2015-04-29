@@ -14,21 +14,16 @@ public class ConfigLoader {
     //format="&a[&3%PLAYER%&a] &c&l>> "
 
     public static String formatMes;
+    public static String formatTag;
+    public static double version;
 
     public static void initConfiguration() {
         File config = new File("config/ExtraChat/config.conf");
         if (!config.exists()) {
-            ExtraChat.logger.warn("Configuration file don't found, creating a new one.");
+            ExtraChat.logger.warn("Configuration file not found, creating a new one.");
             createConfiguration(config);
         }
-        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(config).build();
-        try {
-            CommentedConfigurationNode format = null;
-            format = loader.load();
-            formatMes = format.getNode("format").getValue().toString();
-        } catch (IOException e) {
-            ExtraChat.logger.error("Unable to load the configuration file.");
-        }
+        loadConfig();
     }
 
     public static void loadConfig() {
@@ -37,26 +32,44 @@ public class ConfigLoader {
         try {
             CommentedConfigurationNode format = null;
             format = loader.load();
-            formatMes = format.getNode("format").getValue().toString();
+            version = format.getNode("version").getDouble();
+            formatMes = format.getNode("formatMes").getValue().toString();
+            formatTag = format.getNode("formatTag").getValue().toString();
+            if (version == 0.0) {
+                format.getNode("version").setComment("Config version");
+                format.getNode("version").setValue("1.1");
+                version = 1.1;
+                format.getNode("formatMes").setComment("Format of the chat message where %PLAYER% is the player and %MES% is the message.");
+                format.getNode("formatMes").setValue(formatMes);
+                format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.");
+                format.getNode("formatTag").setValue("%TAG%");
+                loader.save(format);
+            }
+            ExtraChat.logger.info("Config version " + version);
         } catch (IOException e) {
             ExtraChat.logger.error("Unable to load the configuration file.");
         }
     }
 
-    public static void saveConfig(String formated) {
+    public static void saveConfig(String formated, String node) {
         File file = new File("config/ExtraChat/config.conf");
         ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
         CommentedConfigurationNode format = null;
         try {
             loader.createEmptyNode(ConfigurationOptions.defaults());
             format = loader.load();
-            format.getNode("format").setValue(formated);
+            format.getNode(node).setValue(formated);
             loader.save(format);
-            formatMes = formated;
+            if (node.equals("formatMes")) {
+                formatMes = formated;
+            } else {
+                formatTag = formated;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public static void createConfiguration(File file) {
         try {
@@ -70,8 +83,12 @@ public class ConfigLoader {
         try {
             loader.createEmptyNode(ConfigurationOptions.defaults());
             format = loader.load();
-            format.getNode("format").setComment("Format of the chat message where %PLAYER% is the player and %MES% is the message.");
-            format.getNode("format").setValue("<%PLAYER%> %MES%");
+            format.getNode("version").setComment("Config version");
+            format.getNode("version").setValue("1.1");
+            format.getNode("formatMes").setComment("Format of the chat message where %PLAYER% is the player and %MES% is the message.");
+            format.getNode("formatMes").setValue("<%PLAYER%> %MES%");
+            format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.");
+            format.getNode("formatTag").setValue("%TAG% ");
             loader.save(format);
         } catch (IOException e) {
             e.printStackTrace();

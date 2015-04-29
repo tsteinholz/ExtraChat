@@ -1,6 +1,8 @@
 package com.buuz135.extrachat.main.commands;
 
+import com.buuz135.extrachat.main.ExtraChat;
 import com.buuz135.extrachat.main.config.ConfigLoader;
+import com.buuz135.extrachat.main.config.JsonLoader;
 import com.google.common.base.Optional;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
@@ -15,7 +17,7 @@ import java.util.List;
 
 
 public class ExtraChatCommand implements CommandCallable {
-    private String usage = "USAGE: /ec <config> <reload|format>";
+    private String usage = "USAGE: /ec <config|tagadd> <[reload|format]|tag> <player>";
     private Object description = "Main command for ExtraChat";
 
     @Override
@@ -27,7 +29,7 @@ public class ExtraChatCommand implements CommandCallable {
                     if (args.length > 1) {
                         if (args[1].equalsIgnoreCase("reload") && args.length == 2) {
                             ConfigLoader.loadConfig();
-                            source.sendMessage(Texts.of("Configuration reloaded").builder()
+                            source.sendMessage(Texts.of("Configuration reloaded.").builder()
                                     .color(TextColors.GREEN).build());
                         } else if (args[1].equalsIgnoreCase("format")) {
                             if (args.length == 2) {
@@ -42,8 +44,16 @@ public class ExtraChatCommand implements CommandCallable {
                     } else {
                         source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
                     }
-                } else if (args[0].equalsIgnoreCase("tagcreate")) {
-
+                } else if (args[0].equalsIgnoreCase("tagadd")) {
+                    if (args.length == 3){
+                        if (ExtraChat.game.getServer().getPlayer(args[2]).isPresent()){
+                            JsonLoader.insertTag(args[1],args[2],ExtraChat.game.getServer().getPlayer(args[2]).get().getUniqueId().toString());
+                        }else{
+                            source.sendMessage(Texts.of("That player its not online").builder().color(TextColors.RED).build());
+                        }
+                    }else{
+                        source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
+                    }
                 } else {
                     source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
                 }

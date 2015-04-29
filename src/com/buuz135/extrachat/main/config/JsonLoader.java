@@ -34,6 +34,12 @@ public class JsonLoader {
 
     public static void insertTag(String tag, String name, String UUID) {
         JsonWriter writer = null;
+        for (Tag t : Tag.tags) {
+            if (t.getPlayers().containsKey(java.util.UUID.fromString(UUID))) {
+                t.getPlayers().remove(java.util.UUID.fromString(UUID));
+                break;
+            }
+        }
         Tag.getTagByName(tag).getPlayers().put(java.util.UUID.fromString(UUID),name);
         try {
             writer = new JsonWriter(new FileWriter("config/ExtraChat/tags.json"));

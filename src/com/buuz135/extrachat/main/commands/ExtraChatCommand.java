@@ -36,7 +36,7 @@ public class ExtraChatCommand implements CommandCallable {
                         source.sendMessage(Texts.of("Please, introduce a valid format.").builder()
                                 .color(TextColors.DARK_RED).build());
                     } else {
-                        ConfigLoader.saveConfig(arguments.substring(arguments.indexOf("format") + 7));
+                        ConfigLoader.saveConfig(arguments.substring(arguments.indexOf("formatMes") + 11), "formatMes");
                         source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN)
                                 .build());
                     }
@@ -64,6 +64,15 @@ public class ExtraChatCommand implements CommandCallable {
                     } else {
                         source.sendMessage(Texts.of(usage).builder().color(TextColors.RED).build());
                     }
+                } else if (args[0].equalsIgnoreCase("formatTag")) {
+                    if (args.length == 1) {
+                        source.sendMessage(Texts.of("Please, introduce a valid format.").builder()
+                                .color(TextColors.DARK_RED).build());
+                    } else {
+                        ConfigLoader.saveConfig(arguments.substring(arguments.indexOf("formatTag") + 11), "formatTag");
+                        source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN)
+                                .build());
+                    }
                 } else {
                     sendHelpMessage(source);
                 }
@@ -80,6 +89,9 @@ public class ExtraChatCommand implements CommandCallable {
         suggestion.add("reload");
         suggestion.add("formatmes");
         suggestion.add("tagadd");
+        suggestion.add("help");
+        suggestion.add("formattag");
+        suggestion.add("tagremove");
         return suggestion;
     }
 
@@ -115,6 +127,12 @@ public class ExtraChatCommand implements CommandCallable {
                 .builder().color(TextColors.GOLD).build()).build());
         source.sendMessage(Texts.of("/ec taggadd <tag> <player>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
                 .builder().color(TextColors.GRAY).build()).append(Texts.of("Adds the player to the tag removing the current tag.")
+                .builder().color(TextColors.GOLD).build()).build());
+        source.sendMessage(Texts.of("/ec formattag <format>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
+                .builder().color(TextColors.GRAY).build()).append(Texts.of("Saves the tag format.")
+                .builder().color(TextColors.GOLD).build()).build());
+        source.sendMessage(Texts.of("/ec tagremove <player>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
+                .builder().color(TextColors.GRAY).build()).append(Texts.of("Removes the current tag form the player.")
                 .builder().color(TextColors.GOLD).build()).build());
     }
 }

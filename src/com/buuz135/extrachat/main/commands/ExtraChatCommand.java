@@ -73,6 +73,24 @@ public class ExtraChatCommand implements CommandCallable {
                         source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN)
                                 .build());
                     }
+                }else if(args[0].equalsIgnoreCase("addbword")) {
+                    if (args.length == 1) {
+                        source.sendMessage(Texts.of("Please, introduce a valid word.").builder()
+                                .color(TextColors.DARK_RED).build());
+                    }else{
+                        ConfigLoader.addWordtoBlackList(arguments.substring(arguments.indexOf("addbword") + 9));
+                        source.sendMessage(Texts.of("Word added to the blacklist.").builder().color(TextColors.GREEN)
+                                .build());
+                    }
+                }else if(args[0].equalsIgnoreCase("removebword")) {
+                    if (args.length == 1) {
+                        source.sendMessage(Texts.of("Please, introduce a valid word.").builder()
+                                .color(TextColors.DARK_RED).build());
+                    }else{
+                        ConfigLoader.removeWordFromBlackList(arguments.substring(arguments.indexOf("removebword") + 12));
+                        source.sendMessage(Texts.of("Removed word from the blacklist.").builder().color(TextColors.GREEN)
+                                .build());
+                    }
                 } else {
                     sendHelpMessage(source);
                 }
@@ -125,7 +143,7 @@ public class ExtraChatCommand implements CommandCallable {
         source.sendMessage(Texts.of("/ec formatmes <format>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
                 .builder().color(TextColors.GRAY).build()).append(Texts.of("Saves the message format.")
                 .builder().color(TextColors.GOLD).build()).build());
-        source.sendMessage(Texts.of("/ec taggadd <tag> <player>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
+        source.sendMessage(Texts.of("/ec tagadd <tag> <player>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")
                 .builder().color(TextColors.GRAY).build()).append(Texts.of("Adds the player to the tag removing the current tag.")
                 .builder().color(TextColors.GOLD).build()).build());
         source.sendMessage(Texts.of("/ec formattag <format>").builder().color(TextColors.GREEN).append(Texts.of(" -> ")

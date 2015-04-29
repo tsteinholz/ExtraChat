@@ -2,8 +2,6 @@ package com.buuz135.extrachat.main.config;
 
 import com.buuz135.extrachat.main.ExtraChat;
 import com.buuz135.extrachat.main.Tag;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
@@ -40,23 +38,25 @@ public class JsonLoader {
                 break;
             }
         }
-        Tag.getTagByName(tag).getPlayers().put(java.util.UUID.fromString(UUID),name);
+        Tag.getTagByName(tag).getPlayers().put(java.util.UUID.fromString(UUID), name);
         try {
             writer = new JsonWriter(new FileWriter("config/ExtraChat/tags.json"));
             writer.setIndent("    ");
             writer.beginArray();
-            for (Tag temp : Tag.tags){
-                writer.beginObject();
-                writer.name(temp.getName());
-                writer.beginArray();
-                for (UUID uuid : temp.getPlayers().keySet()){
+            for (Tag temp : Tag.tags) {
+                if (!temp.getPlayers().isEmpty()) {
                     writer.beginObject();
-                    writer.name(temp.getPlayers().get(uuid));
-                    writer.value(uuid.toString());
+                    writer.name(temp.getName());
+                    writer.beginArray();
+                    for (UUID uuid : temp.getPlayers().keySet()) {
+                        writer.beginObject();
+                        writer.name(temp.getPlayers().get(uuid));
+                        writer.value(uuid.toString());
+                        writer.endObject();
+                    }
+                    writer.endArray();
                     writer.endObject();
                 }
-                writer.endArray();
-                writer.endObject();
             }
             writer.endArray();
             writer.close();
@@ -78,7 +78,7 @@ public class JsonLoader {
                     while (reader.hasNext()) {
                         reader.beginObject();
                         String name = reader.nextName();
-                        tag.getPlayers().put(UUID.fromString(reader.nextString()),name);
+                        tag.getPlayers().put(UUID.fromString(reader.nextString()), name);
                         reader.endObject();
                     }
                     reader.endArray();
@@ -90,6 +90,40 @@ public class JsonLoader {
             reader.close();
         } catch (IOException e) {
             ExtraChat.logger.warn("Tag json empty");
+        }
+    }
+
+    public static void removeTag(String UUID) {
+        JsonWriter writer = null;
+        for (Tag t : Tag.tags) {
+            if (t.getPlayers().containsKey(java.util.UUID.fromString(UUID))) {
+                t.getPlayers().remove(java.util.UUID.fromString(UUID));
+                break;
+            }
+        }
+        try {
+            writer = new JsonWriter(new FileWriter("config/ExtraChat/tags.json"));
+            writer.setIndent("    ");
+            writer.beginArray();
+            for (Tag temp : Tag.tags) {
+                if (!temp.getPlayers().isEmpty()) {
+                    writer.beginObject();
+                    writer.name(temp.getName());
+                    writer.beginArray();
+                    for (UUID uuid : temp.getPlayers().keySet()) {
+                        writer.beginObject();
+                        writer.name(temp.getPlayers().get(uuid));
+                        writer.value(uuid.toString());
+                        writer.endObject();
+                    }
+                    writer.endArray();
+                    writer.endObject();
+                }
+            }
+            writer.endArray();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

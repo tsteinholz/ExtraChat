@@ -36,7 +36,7 @@ public class ExtraChatCommand implements CommandCallable {
                         source.sendMessage(Texts.of("Please, introduce a valid format.").builder()
                                 .color(TextColors.DARK_RED).build());
                     } else {
-                        ConfigLoader.saveConfig(arguments.substring(arguments.indexOf("formatMes") + 11), "formatMes");
+                        ConfigLoader.saveConfig(arguments.substring(arguments.indexOf("formatMes") + 10), "formatMes");
                         source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN)
                                 .build());
                     }
@@ -73,20 +73,20 @@ public class ExtraChatCommand implements CommandCallable {
                         source.sendMessage(Texts.of("Format saved.").builder().color(TextColors.GREEN)
                                 .build());
                     }
-                }else if(args[0].equalsIgnoreCase("addbword")) {
+                } else if (args[0].equalsIgnoreCase("addbword")) {
                     if (args.length == 1) {
                         source.sendMessage(Texts.of("Please, introduce a valid word.").builder()
                                 .color(TextColors.DARK_RED).build());
-                    }else{
+                    } else {
                         ConfigLoader.addWordtoBlackList(arguments.substring(arguments.indexOf("addbword") + 9));
                         source.sendMessage(Texts.of("Word added to the blacklist.").builder().color(TextColors.GREEN)
                                 .build());
                     }
-                }else if(args[0].equalsIgnoreCase("removebword")) {
+                } else if (args[0].equalsIgnoreCase("removebword")) {
                     if (args.length == 1) {
                         source.sendMessage(Texts.of("Please, introduce a valid word.").builder()
                                 .color(TextColors.DARK_RED).build());
-                    }else{
+                    } else {
                         ConfigLoader.removeWordFromBlackList(arguments.substring(arguments.indexOf("removebword") + 12));
                         source.sendMessage(Texts.of("Removed word from the blacklist.").builder().color(TextColors.GREEN)
                                 .build());

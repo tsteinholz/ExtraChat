@@ -10,7 +10,6 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ConfigLoader {
@@ -21,6 +20,10 @@ public class ConfigLoader {
     public static double version;
     public static List<String> blacklisted;
     public static int style;
+    public static boolean loggerEnabled;
+    public static String loggerPath;
+    public static int replaceInt;
+    public static boolean replaceEnabled;
 
     public static void initConfiguration() {
         File config = new File("config/ExtraChat/config.conf");
@@ -41,20 +44,25 @@ public class ConfigLoader {
             if (version != 1.2) {
                 format.getNode("version").setValue("1.2");
                 version = 1.2;
-                format.getNode("blacklistStyle").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'");
-                format.getNode("blacklistStyle").setValue("1");
-                format.getNode("blacklist").setComment("Blacklisted words in this format 'word,word' without ''");
-                format.getNode("blacklist").setValue("lag,");
+                format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'").setValue("1");
+                format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word,word' without ''").setValue("lag");
+                format.getNode("log").getNode("enabled").setComment("Set to true to enable the chat logger, default true.").setValue(true);
+                format.getNode("log").getNode("destination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
+                format.getNode("wordReplacer").getNode("size").setComment("The amount of chat messages back you can fix.").setValue(10);
+                format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
                 loader.save(format);
             }
             formatMes = format.getNode("formatMes").getValue().toString();
             formatTag = format.getNode("formatTag").getValue().toString();
             blacklisted = new ArrayList<String>();
-            for (String s : format.getNode("blacklist").getString().split(",")){
+            for (String s : format.getNode("blacklist").getNode("words").getString().split(",")) {
                 blacklisted.add(s);
             }
-            style = format.getNode("blacklistStyle").getInt();
-            ExtraChat.logger.info("Config version " + version);
+            style = format.getNode("blacklist").getNode("style").getInt();
+            loggerEnabled = format.getNode("log").getNode("logEnabled").getBoolean();
+            loggerPath = format.getNode("log").getNode("logDestination").getString();
+            replaceEnabled = format.getNode("wordReplacer").getNode("enabled").getBoolean();
+            replaceInt = format.getNode("wordReplacer").getNode("size").getInt();
         } catch (IOException e) {
             ExtraChat.logger.error("Unable to load the configuration file.");
         }
@@ -98,10 +106,12 @@ public class ConfigLoader {
             format.getNode("formatMes").setValue("<%PLAYER%> %MES%");
             format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.");
             format.getNode("formatTag").setValue("%TAG% ");
-            format.getNode("blacklist").setComment("Blacklisted words in this format 'word,word' without ''");
-            format.getNode("blacklist").setValue("lag,");
-            format.getNode("blacklistStyle").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'");
-            format.getNode("blacklistStyle").setValue("1");
+            format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'");
+            format.getNode("blacklist").getNode("style").setValue("1");
+            format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word,word' without ''");
+            format.getNode("blacklist").getNode("words").setValue("lag,");
+            format.getNode("log").getNode("logEnabled").setComment("Set to true to enable the chat logger, default true.").setValue(true);
+            format.getNode("log").getNode("logDestination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
             loader.save(format);
         } catch (IOException e) {
             e.printStackTrace();
@@ -131,13 +141,13 @@ public class ConfigLoader {
             format = loader.load();
             ExtraChat.logger.info(word);
             String temp = "";
-            for (String s : blacklisted){
-                if(s!=null && !s.equals(word)){
+            for (String s : blacklisted) {
+                if (s != null && !s.equals(word)) {
                     temp = temp + s + ",";
                 }
             }
             format.getNode("blacklist").setValue(temp);
-            if(blacklisted.contains(word)){
+            if (blacklisted.contains(word)) {
                 blacklisted.remove(word);
             }
             loader.save(format);

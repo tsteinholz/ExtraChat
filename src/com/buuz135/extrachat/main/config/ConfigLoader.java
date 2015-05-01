@@ -9,6 +9,8 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigLoader {
     //format="&a[&3%PLAYER%&a] &c&l>> "
@@ -16,6 +18,12 @@ public class ConfigLoader {
     public static String formatMes;
     public static String formatTag;
     public static double version;
+    public static List<String> blacklisted;
+    public static int style;
+    public static boolean loggerEnabled;
+    public static String loggerPath;
+    public static int replaceInt;
+    public static boolean replaceEnabled;
 
     public static void initConfiguration() {
         File config = new File("config/ExtraChat/config.conf");
@@ -33,19 +41,28 @@ public class ConfigLoader {
             CommentedConfigurationNode format = null;
             format = loader.load();
             version = format.getNode("version").getDouble();
-            formatMes = format.getNode("formatMes").getValue().toString();
-            formatTag = format.getNode("formatTag").getValue().toString();
-            if (version == 0.0) {
-                format.getNode("version").setComment("Config version");
-                format.getNode("version").setValue("1.1");
-                version = 1.1;
-                format.getNode("formatMes").setComment("Format of the chat message where %PLAYER% is the player and %MES% is the message.");
-                format.getNode("formatMes").setValue(formatMes);
-                format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.");
-                format.getNode("formatTag").setValue("%TAG%");
+            if (version != 1.2) {
+                format.getNode("version").setValue("1.2");
+                version = 1.2;
+                format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'").setValue("1");
+                format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word,word' without ''").setValue("lag");
+                format.getNode("log").getNode("enabled").setComment("Set to true to enable the chat logger, default true.").setValue(true);
+                format.getNode("log").getNode("destination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
+                format.getNode("wordReplacer").getNode("size").setComment("The amount of chat messages back you can fix.").setValue(10);
+                format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
                 loader.save(format);
             }
-            ExtraChat.logger.info("Config version " + version);
+            formatMes = format.getNode("formatMes").getValue().toString();
+            formatTag = format.getNode("formatTag").getValue().toString();
+            blacklisted = new ArrayList<String>();
+            for (String s : format.getNode("blacklist").getNode("words").getString().split(",")) {
+                blacklisted.add(s);
+            }
+            style = format.getNode("blacklist").getNode("style").getInt();
+            loggerEnabled = format.getNode("log").getNode("enabled").getBoolean();
+            loggerPath = format.getNode("log").getNode("destination").getString();
+            replaceEnabled = format.getNode("wordReplacer").getNode("enabled").getBoolean();
+            replaceInt = format.getNode("wordReplacer").getNode("size").getInt();
         } catch (IOException e) {
             ExtraChat.logger.error("Unable to load the configuration file.");
         }
@@ -84,15 +101,85 @@ public class ConfigLoader {
             loader.createEmptyNode(ConfigurationOptions.defaults());
             format = loader.load();
             format.getNode("version").setComment("Config version");
-            format.getNode("version").setValue("1.1");
+            format.getNode("version").setValue("1.2");
             format.getNode("formatMes").setComment("Format of the chat message where %PLAYER% is the player and %MES% is the message.");
             format.getNode("formatMes").setValue("<%PLAYER%> %MES%");
             format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.");
             format.getNode("formatTag").setValue("%TAG% ");
+            format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'").setValue("1");
+            format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word,word' without ''").setValue("lag");
+            format.getNode("log").getNode("enabled").setComment("Set to true to enable the chat logger, default true.").setValue(true);
+            format.getNode("log").getNode("destination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
+            format.getNode("wordReplacer").getNode("size").setComment("The amount of chat messages back you can fix.").setValue(10);
+            format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
             loader.save(format);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public static void addWordtoBlackList(String word) {
+        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config/ExtraChat/config.conf")).build();
+        CommentedConfigurationNode format = null;
+        try {
+            loader.createEmptyNode(ConfigurationOptions.defaults());
+            format = loader.load();
+            format.getNode("blacklist").setValue(format.getNode("blacklist").getValue().toString() + word + ",");
+            blacklisted.add(word);
+            loader.save(format);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void toggleLog() {
+        loggerEnabled = !loggerEnabled;
+        File file = new File("config/ExtraChat/config.conf");
+        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
+        CommentedConfigurationNode format = null;
+        try {
+            loader.createEmptyNode(ConfigurationOptions.defaults());
+            format = loader.load();
+            format.getNode("log").getNode("enabled").setValue(loggerEnabled);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void toggleReplace() {
+        replaceEnabled = !replaceEnabled;
+        File file = new File("config/ExtraChat/config.conf");
+        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
+        CommentedConfigurationNode format = null;
+        try {
+            loader.createEmptyNode(ConfigurationOptions.defaults());
+            format = loader.load();
+            format.getNode("wordReplacer").getNode("enabled").setValue(replaceEnabled);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeWordFromBlackList(String word) {
+        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config/ExtraChat/config.conf")).build();
+        CommentedConfigurationNode format = null;
+        try {
+            loader.createEmptyNode(ConfigurationOptions.defaults());
+            format = loader.load();
+            ExtraChat.logger.info(word);
+            String temp = "";
+            for (String s : blacklisted) {
+                if (s != null && !s.equals(word)) {
+                    temp = temp + s + ",";
+                }
+            }
+            format.getNode("blacklist").setValue(temp);
+            if (blacklisted.contains(word)) {
+                blacklisted.remove(word);
+            }
+            loader.save(format);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

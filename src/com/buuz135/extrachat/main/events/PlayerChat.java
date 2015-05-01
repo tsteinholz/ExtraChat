@@ -1,11 +1,12 @@
 package com.buuz135.extrachat.main.events;
 
 
+import com.buuz135.extrachat.api.Format;
+import com.buuz135.extrachat.main.ExtraChat;
 import com.buuz135.extrachat.main.Tag;
 import com.buuz135.extrachat.main.config.ConfigLoader;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 
 public class PlayerChat {
@@ -17,15 +18,19 @@ public class PlayerChat {
                 tag = ConfigLoader.formatTag.replace("%TAG%", temp.getName());
             }
         }
-        String mess = Texts.toPlain(event.getMessage());
-        mess = ConfigLoader.formatMes.replace("%PLAYER%", event.getPlayer().getName())
-                .replace("%MES%", mess.substring(mess.indexOf(" ") + 1));
-
-
-        event.setMessage(colorString(tag + mess));
+        String mess = Format.formatMessageToString(ConfigLoader.formatMes, event.getPlayer().getName(), Format.getRawMessage(Texts.toPlain(event.getMessage())));
+        String style = "*";
+        if (ConfigLoader.style == 2) {
+            style = "@#*%&";
+        }
+        mess = Format.blacklistWords(mess, ConfigLoader.blacklisted, style);
+        if (Format.getRawMessage(Texts.toPlain(event.getMessage())).startsWith("r/") && ConfigLoader.replaceEnabled) {
+            ExtraChat.replaceLogger.fixMsg(event.getPlayer().getName(), Format.getRawMessage(Texts.toPlain(event.getMessage())));
+            event.setCancelled(true);
+        } else {
+            ExtraChat.replaceLogger.insertLog(event.getPlayer().getName(), Format.getRawMessage(Texts.toPlain(event.getMessage())));
+            event.setMessage(Format.colorString("&r" + tag + mess));
+        }
     }
 
-    private Text colorString(String mess) {
-        return Texts.of(Texts.replaceCodes(mess, '&'));
-    }
 }

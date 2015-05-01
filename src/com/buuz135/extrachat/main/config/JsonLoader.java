@@ -23,11 +23,6 @@ public class JsonLoader {
             }
         }
         readJson();
-//        insertTag("tagTest1", "name1","38553ec3-7569-4811-97d8-5743c980bbf9");
-//        insertTag("tagTest1", "name2", UUID.randomUUID().toString());
-//        insertTag("tagTest1", "name3", UUID.randomUUID().toString());
-//        insertTag("tagTest2", "name1", UUID.randomUUID().toString());
-
     }
 
     public static void insertTag(String tag, String name, String UUID) {

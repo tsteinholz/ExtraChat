@@ -7,7 +7,6 @@ import com.buuz135.extrachat.main.Tag;
 import com.buuz135.extrachat.main.config.ConfigLoader;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
-import org.spongepowered.api.event.entity.player.PlayerDeathEvent;
 import org.spongepowered.api.text.Texts;
 
 public class PlayerChat {
@@ -25,22 +24,13 @@ public class PlayerChat {
             style = "@#*%&";
         }
         mess = Format.blacklistWords(mess, ConfigLoader.blacklisted, style);
-        ExtraChat.logger.info(ConfigLoader.formatMes);
-        ExtraChat.logger.info(Texts.toPlain(event.getMessage()));
-        if (Format.getRawMessage(Texts.toPlain(event.getMessage())).startsWith("r/")&&ConfigLoader.replaceEnabled) {
+        if (Format.getRawMessage(Texts.toPlain(event.getMessage())).startsWith("r/") && ConfigLoader.replaceEnabled) {
             ExtraChat.replaceLogger.fixMsg(event.getPlayer().getName(), Format.getRawMessage(Texts.toPlain(event.getMessage())));
             event.setCancelled(true);
         } else {
             ExtraChat.replaceLogger.insertLog(event.getPlayer().getName(), Format.getRawMessage(Texts.toPlain(event.getMessage())));
-            event.setMessage(Format.colorString((tag+  mess)));
+            event.setMessage(Format.colorString("&r" + tag + mess));
         }
     }
-
-    @Subscribe
-    public void onDeath(PlayerDeathEvent e) {
-        ExtraChat.logger.info(e.getCause().get().toString());
-        e.setCancelled(true);
-    }
-
 
 }

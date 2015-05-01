@@ -24,7 +24,6 @@ public class ReplaceLogger {
         if (log.size() > ConfigLoader.replaceInt) {
             log.remove(log.entries().iterator().next().getKey(), log.entries().iterator().next().getValue());
         }
-        ExtraChat.logger.info(log.toString());
     }
 
     public void fixMsg(String player, String fix) {
@@ -32,7 +31,6 @@ public class ReplaceLogger {
         if (args.length == 3) {
             logTemp = ArrayListMultimap.create();
             recursive(log.entries().iterator(), player, args[1], args[2], true);
-            log = logTemp;
             write(logTemp.entries().iterator());
         }
     }
@@ -57,5 +55,6 @@ public class ReplaceLogger {
         Map.Entry<String, String> entry = iterator.next();
         if (iterator.hasNext()) write(iterator);
         ExtraChat.game.getServer().broadcastMessage(Format.colorString(Format.formatMessageToString(ConfigLoader.formatMes, entry.getKey(), entry.getValue())));
+        insertLog(entry.getKey(), entry.getValue());
     }
 }

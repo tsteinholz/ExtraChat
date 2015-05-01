@@ -59,8 +59,8 @@ public class ConfigLoader {
                 blacklisted.add(s);
             }
             style = format.getNode("blacklist").getNode("style").getInt();
-            loggerEnabled = format.getNode("log").getNode("logEnabled").getBoolean();
-            loggerPath = format.getNode("log").getNode("logDestination").getString();
+            loggerEnabled = format.getNode("log").getNode("enabled").getBoolean();
+            loggerPath = format.getNode("log").getNode("destination").getString();
             replaceEnabled = format.getNode("wordReplacer").getNode("enabled").getBoolean();
             replaceInt = format.getNode("wordReplacer").getNode("size").getInt();
         } catch (IOException e) {
@@ -106,12 +106,12 @@ public class ConfigLoader {
             format.getNode("formatMes").setValue("<%PLAYER%> %MES%");
             format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.");
             format.getNode("formatTag").setValue("%TAG% ");
-            format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'");
-            format.getNode("blacklist").getNode("style").setValue("1");
-            format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word,word' without ''");
-            format.getNode("blacklist").getNode("words").setValue("lag,");
-            format.getNode("log").getNode("logEnabled").setComment("Set to true to enable the chat logger, default true.").setValue(true);
-            format.getNode("log").getNode("logDestination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
+            format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'").setValue("1");
+            format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word,word' without ''").setValue("lag");
+            format.getNode("log").getNode("enabled").setComment("Set to true to enable the chat logger, default true.").setValue(true);
+            format.getNode("log").getNode("destination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
+            format.getNode("wordReplacer").getNode("size").setComment("The amount of chat messages back you can fix.").setValue(10);
+            format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
             loader.save(format);
         } catch (IOException e) {
             e.printStackTrace();
@@ -128,6 +128,33 @@ public class ConfigLoader {
             format.getNode("blacklist").setValue(format.getNode("blacklist").getValue().toString() + word + ",");
             blacklisted.add(word);
             loader.save(format);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void toggleLog() {
+        loggerEnabled = !loggerEnabled;
+        File file = new File("config/ExtraChat/config.conf");
+        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
+        CommentedConfigurationNode format = null;
+        try {
+            loader.createEmptyNode(ConfigurationOptions.defaults());
+            format = loader.load();
+            format.getNode("log").getNode("enabled").setValue(loggerEnabled);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void toggleReplace() {
+        replaceEnabled = !replaceEnabled;
+        File file = new File("config/ExtraChat/config.conf");
+        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
+        CommentedConfigurationNode format = null;
+        try {
+            loader.createEmptyNode(ConfigurationOptions.defaults());
+            format = loader.load();
+            format.getNode("wordReplacer").getNode("enabled").setValue(replaceEnabled);
         } catch (IOException e) {
             e.printStackTrace();
         }

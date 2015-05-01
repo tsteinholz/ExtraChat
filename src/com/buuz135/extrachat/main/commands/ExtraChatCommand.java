@@ -91,6 +91,14 @@ public class ExtraChatCommand implements CommandCallable {
                         source.sendMessage(Texts.of("Removed word from the blacklist.").builder().color(TextColors.GREEN)
                                 .build());
                     }
+                } else if (args[0].equalsIgnoreCase("togglelog")) {
+                    ConfigLoader.toggleLog();
+                    source.sendMessage(Texts.of("Toggled the log.").builder().color(TextColors.GREEN)
+                            .build());
+                } else if (args[0].equalsIgnoreCase("togglereplace")) {
+                    ConfigLoader.toggleReplace();
+                    source.sendMessage(Texts.of("Toggled the replace function.").builder().color(TextColors.GREEN)
+                            .build());
                 } else {
                     sendHelpMessage(source);
                 }

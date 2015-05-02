@@ -32,5 +32,4 @@ public class PlayerChat {
             event.setMessage(Format.colorString("&r" + tag + mess));
         }
     }
-
 }

@@ -146,6 +146,7 @@ public class ConfigLoader {
             e.printStackTrace();
         }
     }
+
     public static void toggleReplace() {
         replaceEnabled = !replaceEnabled;
         File file = new File("config/ExtraChat/config.conf");

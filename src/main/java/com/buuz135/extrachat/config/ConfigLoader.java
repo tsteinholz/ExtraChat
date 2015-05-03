@@ -41,7 +41,7 @@ public class ConfigLoader {
             CommentedConfigurationNode format = null;
             format = loader.load();
             version = format.getNode("version").getDouble();
-            if (version != 1.2) {
+            if (version < 1.2) {
                 format.getNode("version").setValue("1.2");
                 version = 1.2;
                 format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'").setValue("1");
@@ -51,6 +51,11 @@ public class ConfigLoader {
                 format.getNode("wordReplacer").getNode("size").setComment("The amount of chat messages back you can fix.").setValue(10);
                 format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
                 loader.save(format);
+            }
+            if (version < 1.3){
+                format.getNode("broadcaster").getNode("enabled").setComment("Set to true to enable the broadcaster.").setValue("true");
+                format.getNode("broadcaster").getNode("time").setComment("Time in ticks in which the broadcaster will transmit a message. (20 ticks = 1 second)").setValue(1200);
+                format.getNode("broadcaster").getNode("format").setComment("Format of the broadcast where %MES% is the message.").setValue(" %MES%");
             }
             formatMes = format.getNode("formatMes").getValue().toString();
             formatTag = format.getNode("formatTag").getValue().toString();

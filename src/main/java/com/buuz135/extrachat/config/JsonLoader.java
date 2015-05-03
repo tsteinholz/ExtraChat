@@ -2,6 +2,8 @@ package com.buuz135.extrachat.main.config;
 
 import com.buuz135.extrachat.main.ExtraChat;
 import com.buuz135.extrachat.main.Tag;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 

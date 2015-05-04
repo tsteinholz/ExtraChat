@@ -1,5 +1,6 @@
 package main.java.com.buuz135.extrachat;
 
+import main.java.com.buuz135.extrachat.broadcast.Broadcaster;
 import main.java.com.buuz135.extrachat.commands.ExtraChatCommand;
 import main.java.com.buuz135.extrachat.config.ConfigLoader;
 import main.java.com.buuz135.extrachat.config.JsonLoader;
@@ -43,6 +44,7 @@ public class ExtraChat {
     @Subscribe
     public void postInit(PostInitializationEvent event) {
         replaceLogger = new ReplaceLogger();
+        Broadcaster.startBroadcastTask();
     }
 
     @Subscribe

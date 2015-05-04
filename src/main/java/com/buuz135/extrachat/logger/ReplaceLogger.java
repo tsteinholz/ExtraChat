@@ -1,7 +1,6 @@
 package main.java.com.buuz135.extrachat.logger;
 
 
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import main.java.com.buuz135.api.Format;

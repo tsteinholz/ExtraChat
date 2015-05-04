@@ -1,12 +1,13 @@
 package main.java.com.buuz135.extrachat.config;
 
 
-
 import main.java.com.buuz135.extrachat.ExtraChat;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.Texts;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,9 @@ public class ConfigLoader {
     public static String loggerPath;
     public static int replaceInt;
     public static boolean replaceEnabled;
+    public static int broadcastTime;
+    public static Text broadcastTag;
+    public static boolean broadcastEnabled;
 
     public static void initConfiguration() {
         File config = new File("config/ExtraChat/config.conf");
@@ -42,6 +46,7 @@ public class ConfigLoader {
             CommentedConfigurationNode format = null;
             format = loader.load();
             version = format.getNode("version").getDouble();
+            ExtraChat.logger.info("Config version " + version);
             if (version < 1.2) {
                 format.getNode("version").setValue("1.2");
                 version = 1.2;
@@ -54,9 +59,12 @@ public class ConfigLoader {
                 loader.save(format);
             }
             if (version < 1.3) {
+                format.getNode("version").setValue("1.3");
+                version = 1.3;
                 format.getNode("broadcaster").getNode("enabled").setComment("Set to true to enable the broadcaster.").setValue("true");
                 format.getNode("broadcaster").getNode("time").setComment("Time in ticks in which the broadcaster will transmit a message. (20 ticks = 1 second)").setValue(1200);
-                format.getNode("broadcaster").getNode("format").setComment("Format of the broadcast where %MES% is the message.").setValue(" %MES%");
+                format.getNode("broadcaster").getNode("format").setComment("Format of the tag that will show in front of the broadcast.").setValue("");
+                loader.save(format);
             }
             formatMes = format.getNode("formatMes").getValue().toString();
             formatTag = format.getNode("formatTag").getValue().toString();
@@ -69,6 +77,9 @@ public class ConfigLoader {
             loggerPath = format.getNode("log").getNode("destination").getString();
             replaceEnabled = format.getNode("wordReplacer").getNode("enabled").getBoolean();
             replaceInt = format.getNode("wordReplacer").getNode("size").getInt();
+            broadcastTime = format.getNode("broadcaster").getNode("time").getInt();
+            broadcastEnabled = format.getNode("broadcaster").getNode("enabled").getBoolean();
+            broadcastTag = Texts.fromLegacy(format.getNode("broadcaster").getNode("format").getString(), '&');
         } catch (IOException e) {
             ExtraChat.logger.error("Unable to load the configuration file.");
         }
@@ -106,18 +117,18 @@ public class ConfigLoader {
         try {
             loader.createEmptyNode(ConfigurationOptions.defaults());
             format = loader.load();
-            format.getNode("version").setComment("Config version");
-            format.getNode("version").setValue("1.2");
-            format.getNode("formatMes").setComment("Format of the chat message where %PLAYER% is the player and %MES% is the message.");
-            format.getNode("formatMes").setValue("<%PLAYER%> %MES%");
-            format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.");
-            format.getNode("formatTag").setValue("%TAG% ");
+            format.getNode("version").setComment("Config version").setValue("1.2");
+            format.getNode("formatMes").setComment("Format of the chat message where %PLAYER% is the player and %MES% is the message.").setValue("<%PLAYER%> %MES%");
+            format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.").setValue("%TAG% ");
             format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'").setValue("1");
             format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word,word' without ''").setValue("lag");
             format.getNode("log").getNode("enabled").setComment("Set to true to enable the chat logger, default true.").setValue(true);
             format.getNode("log").getNode("destination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
             format.getNode("wordReplacer").getNode("size").setComment("The amount of chat messages back you can fix.").setValue(10);
             format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
+            format.getNode("broadcaster").getNode("enabled").setComment("Set to true to enable the broadcaster.").setValue("true");
+            format.getNode("broadcaster").getNode("time").setComment("Time in ticks in which the broadcaster will transmit a message. (20 ticks = 1 second)").setValue(1200);
+            format.getNode("broadcaster").getNode("format").setComment("Format of the tag that will show in front of the broadcast.").setValue(" ");
             loader.save(format);
         } catch (IOException e) {
             e.printStackTrace();

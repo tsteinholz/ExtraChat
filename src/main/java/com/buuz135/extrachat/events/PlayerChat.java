@@ -1,7 +1,6 @@
 package main.java.com.buuz135.extrachat.events;
 
 
-
 import main.java.com.buuz135.api.Format;
 import main.java.com.buuz135.extrachat.ExtraChat;
 import main.java.com.buuz135.extrachat.Tag;

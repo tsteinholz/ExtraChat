@@ -1,10 +1,10 @@
-package main.java.com.buuz135.extrachat.events;
+package com.buuz135.extrachat.events;
 
 
-import main.java.com.buuz135.api.Format;
-import main.java.com.buuz135.extrachat.ExtraChat;
-import main.java.com.buuz135.extrachat.Tag;
-import main.java.com.buuz135.extrachat.config.ConfigLoader;
+import com.buuz135.api.Format;
+import com.buuz135.extrachat.ExtraChat;
+import com.buuz135.extrachat.Tag;
+import com.buuz135.extrachat.config.ConfigLoader;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
 import org.spongepowered.api.text.Texts;

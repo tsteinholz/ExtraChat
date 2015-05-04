@@ -1,8 +1,8 @@
-package main.java.com.buuz135.extrachat.broadcast;
+package com.buuz135.extrachat.broadcast;
 
 
-import main.java.com.buuz135.extrachat.ExtraChat;
-import main.java.com.buuz135.extrachat.config.ConfigLoader;
+import com.buuz135.extrachat.ExtraChat;
+import com.buuz135.extrachat.config.ConfigLoader;
 import org.spongepowered.api.service.scheduler.Task;
 import org.spongepowered.api.text.Text;
 

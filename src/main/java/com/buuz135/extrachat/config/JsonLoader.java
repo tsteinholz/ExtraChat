@@ -1,11 +1,11 @@
-package main.java.com.buuz135.extrachat.config;
+package com.buuz135.extrachat.config;
 
 
+import com.buuz135.extrachat.ExtraChat;
+import com.buuz135.extrachat.Tag;
+import com.buuz135.extrachat.broadcast.Broadcaster;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import main.java.com.buuz135.extrachat.ExtraChat;
-import main.java.com.buuz135.extrachat.Tag;
-import main.java.com.buuz135.extrachat.broadcast.Broadcaster;
 import org.spongepowered.api.text.TextBuilder;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.ClickAction;
@@ -158,13 +158,13 @@ public class JsonLoader {
                     if (onClick.equals("openURL")) {
                         builder.onClick(new ClickAction.OpenUrl(new URL(reader.nextString())));
                     }
-                    if (onClick.equals("suggestCommand")){
+                    if (onClick.equals("suggestCommand")) {
                         builder.onClick(new ClickAction.SuggestCommand(reader.nextString()));
                     }
-                    if (onClick.equals("runCommand")){
+                    if (onClick.equals("runCommand")) {
                         builder.onClick(new ClickAction.RunCommand(reader.nextString()));
                     }
-                }else{
+                } else {
                     reader.nextString();
                 }
                 reader.endObject();

@@ -1,7 +1,7 @@
-package main.java.com.buuz135.extrachat.config;
+package com.buuz135.extrachat.config;
 
 
-import main.java.com.buuz135.extrachat.ExtraChat;
+import com.buuz135.extrachat.ExtraChat;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -63,7 +63,7 @@ public class ConfigLoader {
                 version = 1.3;
                 format.getNode("broadcaster").getNode("enabled").setComment("Set to true to enable the broadcaster.").setValue("true");
                 format.getNode("broadcaster").getNode("time").setComment("Time in ticks in which the broadcaster will transmit a message. (20 ticks = 1 second)").setValue(1200);
-                format.getNode("broadcaster").getNode("format").setComment("Format of the tag that will show in front of the broadcast.").setValue("");
+                format.getNode("broadcaster").getNode("format").setComment("Format of the tag that will show in front of the broadcast.").setValue(" &7[&4!&7] ");
                 loader.save(format);
             }
             formatMes = format.getNode("formatMes").getValue().toString();
@@ -128,7 +128,7 @@ public class ConfigLoader {
             format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
             format.getNode("broadcaster").getNode("enabled").setComment("Set to true to enable the broadcaster.").setValue("true");
             format.getNode("broadcaster").getNode("time").setComment("Time in ticks in which the broadcaster will transmit a message. (20 ticks = 1 second)").setValue(1200);
-            format.getNode("broadcaster").getNode("format").setComment("Format of the tag that will show in front of the broadcast.").setValue(" ");
+            format.getNode("broadcaster").getNode("format").setComment("Format of the tag that will show in front of the broadcast.").setValue(" &7[&4!&7] ");
             loader.save(format);
         } catch (IOException e) {
             e.printStackTrace();

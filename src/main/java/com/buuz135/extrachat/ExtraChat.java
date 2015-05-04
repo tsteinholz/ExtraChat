@@ -1,12 +1,14 @@
-package main.java.com.buuz135.extrachat;
+package com.buuz135.extrachat;
 
-import main.java.com.buuz135.extrachat.broadcast.Broadcaster;
-import main.java.com.buuz135.extrachat.commands.ExtraChatCommand;
-import main.java.com.buuz135.extrachat.config.ConfigLoader;
-import main.java.com.buuz135.extrachat.config.JsonLoader;
-import main.java.com.buuz135.extrachat.events.PlayerChat;
-import main.java.com.buuz135.extrachat.logger.ChatLogger;
-import main.java.com.buuz135.extrachat.logger.ReplaceLogger;
+
+import com.buuz135.extrachat.broadcast.BRCommand;
+import com.buuz135.extrachat.broadcast.Broadcaster;
+import com.buuz135.extrachat.commands.ExtraChatCommand;
+import com.buuz135.extrachat.config.ConfigLoader;
+import com.buuz135.extrachat.config.JsonLoader;
+import com.buuz135.extrachat.events.PlayerChat;
+import com.buuz135.extrachat.logger.ChatLogger;
+import com.buuz135.extrachat.logger.ReplaceLogger;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
@@ -16,6 +18,7 @@ import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+
 
 @Plugin(id = "ExtraChat", name = "ExtraChat", version = "1.0")
 public class ExtraChat {
@@ -31,6 +34,7 @@ public class ExtraChat {
         logger = event.getGame().getPluginManager().getLogger(pluginContainer);
         game = event.getGame();
         event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new ExtraChatCommand(), "ec");
+        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new BRCommand(), "br");
     }
 
     @Subscribe

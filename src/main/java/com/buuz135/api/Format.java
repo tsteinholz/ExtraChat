@@ -1,4 +1,4 @@
-package main.java.com.buuz135.api;
+package com.buuz135.api;
 
 
 import com.sun.istack.internal.NotNull;

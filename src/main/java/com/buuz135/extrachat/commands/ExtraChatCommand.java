@@ -1,10 +1,10 @@
-package main.java.com.buuz135.extrachat.commands;
+package com.buuz135.extrachat.commands;
 
 
+import com.buuz135.extrachat.ExtraChat;
+import com.buuz135.extrachat.config.ConfigLoader;
+import com.buuz135.extrachat.config.JsonLoader;
 import com.google.common.base.Optional;
-import main.java.com.buuz135.extrachat.ExtraChat;
-import main.java.com.buuz135.extrachat.config.ConfigLoader;
-import main.java.com.buuz135.extrachat.config.JsonLoader;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;

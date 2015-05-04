@@ -1,11 +1,12 @@
-package com.buuz135.extrachat.main.logger;
+package main.java.com.buuz135.extrachat.logger;
 
 
-import com.buuz135.extrachat.api.Format;
-import com.buuz135.extrachat.main.ExtraChat;
-import com.buuz135.extrachat.main.config.ConfigLoader;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import main.java.com.buuz135.api.Format;
+import main.java.com.buuz135.extrachat.ExtraChat;
+import main.java.com.buuz135.extrachat.config.ConfigLoader;
 
 import java.util.Iterator;
 import java.util.Map;

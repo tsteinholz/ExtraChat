@@ -1,11 +1,10 @@
-package com.buuz135.extrachat.main.config;
+package main.java.com.buuz135.extrachat.config;
 
-import com.buuz135.extrachat.main.ExtraChat;
-import com.buuz135.extrachat.main.Tag;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import main.java.com.buuz135.extrachat.ExtraChat;
+import main.java.com.buuz135.extrachat.Tag;
 
 import java.io.File;
 import java.io.FileReader;

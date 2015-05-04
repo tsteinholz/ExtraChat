@@ -1,11 +1,11 @@
-package com.buuz135.extrachat.main;
+package main.java.com.buuz135.extrachat;
 
-import com.buuz135.extrachat.main.commands.ExtraChatCommand;
-import com.buuz135.extrachat.main.config.ConfigLoader;
-import com.buuz135.extrachat.main.config.JsonLoader;
-import com.buuz135.extrachat.main.events.PlayerChat;
-import com.buuz135.extrachat.main.logger.ChatLogger;
-import com.buuz135.extrachat.main.logger.ReplaceLogger;
+import main.java.com.buuz135.extrachat.commands.ExtraChatCommand;
+import main.java.com.buuz135.extrachat.config.ConfigLoader;
+import main.java.com.buuz135.extrachat.config.JsonLoader;
+import main.java.com.buuz135.extrachat.events.PlayerChat;
+import main.java.com.buuz135.extrachat.logger.ChatLogger;
+import main.java.com.buuz135.extrachat.logger.ReplaceLogger;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;

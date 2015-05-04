@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 version = '1.3'
-group= 'com.buuz135.extrachat'
+group = 'com.buuz135.extrachat'
 archivesBaseName = 'ExtraChat'
 
 repositories {
@@ -14,7 +14,7 @@ repositories {
         name 'Sponge maven repo'
         url 'http://repo.spongepowered.org/maven'
     }
-    maven{
+    maven {
         name 'Gson'
         url 'http://mvnrepository.com/artifact/com.google.code.gson/gson'
     }

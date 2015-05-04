@@ -1,4 +1,4 @@
-package com.buuz135.extrachat.main;
+package main.java.com.buuz135.extrachat;
 
 
 import java.util.ArrayList;

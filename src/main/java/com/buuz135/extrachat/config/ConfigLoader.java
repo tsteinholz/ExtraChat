@@ -1,7 +1,8 @@
-package com.buuz135.extrachat.main.config;
+package main.java.com.buuz135.extrachat.config;
 
 
-import com.buuz135.extrachat.main.ExtraChat;
+
+import main.java.com.buuz135.extrachat.ExtraChat;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -52,7 +53,7 @@ public class ConfigLoader {
                 format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
                 loader.save(format);
             }
-            if (version < 1.3){
+            if (version < 1.3) {
                 format.getNode("broadcaster").getNode("enabled").setComment("Set to true to enable the broadcaster.").setValue("true");
                 format.getNode("broadcaster").getNode("time").setComment("Time in ticks in which the broadcaster will transmit a message. (20 ticks = 1 second)").setValue(1200);
                 format.getNode("broadcaster").getNode("format").setComment("Format of the broadcast where %MES% is the message.").setValue(" %MES%");

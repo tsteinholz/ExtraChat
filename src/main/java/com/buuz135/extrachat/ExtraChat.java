@@ -20,7 +20,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
 
-@Plugin(id = "ExtraChat", name = "ExtraChat", version = "1.0")
+@Plugin(id = "EC", name = "ExtraChat", version = "1.3")
 public class ExtraChat {
     public static Logger logger;
     public static PluginContainer pluginContainer;
@@ -30,11 +30,11 @@ public class ExtraChat {
 
     @Subscribe
     public void preInit(PreInitializationEvent event) {
-        pluginContainer = event.getGame().getPluginManager().getPlugin("ExtraChat").get();
+        pluginContainer = event.getGame().getPluginManager().getPlugin("EC").get();
         logger = event.getGame().getPluginManager().getLogger(pluginContainer);
         game = event.getGame();
-        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new ExtraChatCommand(), "ec");
-        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new BRCommand(), "br");
+        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new ExtraChatCommand(), "ec", "extrachat");
+        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new BRCommand(), "br", "broadcast");
     }
 
     @Subscribe
@@ -46,7 +46,7 @@ public class ExtraChat {
     }
 
     @Subscribe
-    public void postInit(PostInitializationEvent event) {
+    public void postInit(final PostInitializationEvent event) {
         replaceLogger = new ReplaceLogger();
         Broadcaster.startBroadcastTask();
     }
@@ -59,4 +59,6 @@ public class ExtraChat {
             ChatLogger.fileTo.delete();
         }
     }
+
+
 }

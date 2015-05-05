@@ -1,38 +1,44 @@
 [
-    {
-        "&9Search that for me": [//this is the actual message
-            {
-                "onClick": {
-                    "openURL": "https://www.google.es/" //open url action on click make sure to have the protocol in the URL. Set the action to "null" 
-                }//don't use any action.
-            },
-            {
-                "onHover": "Google god" //the message that will show when you hover over. Set the message to "null" to don't display any hover message.
-            }
-        ]
-    },
-	{
-        "&9Test suggest message": [
-            {
-                "onClick": {
-                    "suggestCommand": "/me" //This action will suggest a command to the player to run.
-                }
-            },
-            {
-                "onHover": "Click here to get a suggested command"
-            }
-        ]
-    },
-	{
-        "&9It's me Mario!": [
-            {
-                "onClick": {
-                    "runCommand": "/me thinks that its mario" //This will run a command from the player.
-                }
-            },
-            {
-                "onHover": "Maybe I am Mario."
-            }
-        ]
-    }
+  {
+    "&9Search that for me": [
+      //this is the actual message
+      {
+        "onClick": {
+          "openURL": "https://www.google.es/"
+          //open url action on click make sure to have the protocol in the URL. Set the action to "null"
+        }
+        //don't use any action.
+      },
+      {
+        "onHover": "Google god"
+        //the message that will show when you hover over. Set the message to "null" to don't display any hover message.
+      }
+    ]
+  },
+  {
+    "&9Test suggest message": [
+      {
+        "onClick": {
+          "suggestCommand": "/me"
+          //This action will suggest a command to the player to run.
+        }
+      },
+      {
+        "onHover": "Click here to get a suggested command"
+      }
+    ]
+  },
+  {
+    "&9It's me Mario!": [
+      {
+        "onClick": {
+          "runCommand": "/me thinks that he is mario"
+          //This will run a command from the player.
+        }
+      },
+      {
+        "onHover": "Maybe I am Mario."
+      }
+    ]
+  }
 ]

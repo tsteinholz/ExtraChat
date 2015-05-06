@@ -1,1 +1,19 @@
-build/
+# gradle stuffs
+build
+.gradle
+eclipse
+
+
+# eclipse stuffs
+.classpath
+.project
+.settings
+bin
+
+# intellij stuffs
+
+.idea
+out
+*.iml
+*.ipr
+*.iws

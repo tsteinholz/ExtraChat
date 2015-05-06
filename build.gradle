@@ -18,10 +18,23 @@ repositories {
         name 'Gson'
         url 'http://mvnrepository.com/artifact/com.google.code.gson/gson'
     }
+    maven{
+        name 'MetricsPlugin'
+        url 'http://repo.mcstats.org/content/repositories/releases/'
+    }
 }
 
 dependencies {
     compile "org.spongepowered:spongeapi:1.1-SNAPSHOT"
     compile "ninja.leaping.configurate:configurate-hocon:1.0-SNAPSHOT"
-    compile 'com.google.code.gson:gson:2.3.1'
+    compile "com.google.code.gson:gson:2.3.1"
+    compile "org.mcstats.standalone:metrics:R7"
+}
+jar {
+    manifest {
+        attributes "Main-Class": "org.mcstats.Metrics"
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }

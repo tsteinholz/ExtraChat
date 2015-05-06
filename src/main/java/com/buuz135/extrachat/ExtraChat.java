@@ -1,6 +1,7 @@
 package com.buuz135.extrachat;
 
 
+import com.buuz135.api.ExtraMetrics;
 import com.buuz135.extrachat.broadcast.BRCommand;
 import com.buuz135.extrachat.broadcast.Broadcaster;
 import com.buuz135.extrachat.commands.ExtraChatCommand;
@@ -12,12 +13,11 @@ import com.buuz135.extrachat.logger.ReplaceLogger;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.InitializationEvent;
-import org.spongepowered.api.event.state.PostInitializationEvent;
-import org.spongepowered.api.event.state.PreInitializationEvent;
-import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.event.state.*;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+
+import java.io.IOException;
 
 
 @Plugin(id = "EC", name = "ExtraChat", version = "1.3")
@@ -57,6 +57,21 @@ public class ExtraChat {
         if (ChatLogger.fileTo != null) {
             ChatLogger.compressFile();
             ChatLogger.fileTo.delete();
+        }
+    }
+
+    @Subscribe
+    public void serverStart(ServerStartedEvent event){
+        try {
+            ExtraMetrics metrics = new ExtraMetrics("ExtraChat","1.3",event.getGame());
+            metrics.start();
+            if (!metrics.isOptOut()){
+                logger.info("Metrics module enabled.");
+            }else{
+                logger.info("Metrics module disabled.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

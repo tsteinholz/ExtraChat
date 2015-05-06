@@ -21,7 +21,7 @@ import java.io.IOException;
 
 
 @Plugin(id = "EC", name = "ExtraChat", version = "1.3")
-public class ExtraChat {
+public class ExtraChat {//
     public static Logger logger;
     public static PluginContainer pluginContainer;
     public static Game game;

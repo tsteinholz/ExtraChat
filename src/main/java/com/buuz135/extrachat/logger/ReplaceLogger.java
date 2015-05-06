@@ -1,9 +1,9 @@
-package com.buuz135.extrachat.main.logger;
+package com.buuz135.extrachat.logger;
 
 
-import com.buuz135.extrachat.api.Format;
-import com.buuz135.extrachat.main.ExtraChat;
-import com.buuz135.extrachat.main.config.ConfigLoader;
+import com.buuz135.api.Format;
+import com.buuz135.extrachat.ExtraChat;
+import com.buuz135.extrachat.config.ConfigLoader;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 

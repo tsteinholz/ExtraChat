@@ -1,7 +1,8 @@
-package com.buuz135.extrachat.main.logger;
+package com.buuz135.extrachat.logger;
 
-import com.buuz135.extrachat.main.ExtraChat;
-import com.buuz135.extrachat.main.config.ConfigLoader;
+
+import com.buuz135.extrachat.ExtraChat;
+import com.buuz135.extrachat.config.ConfigLoader;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;

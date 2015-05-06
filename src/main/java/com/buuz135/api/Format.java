@@ -1,7 +1,6 @@
-package com.buuz135.extrachat.api;
+package com.buuz135.api;
 
 
-import com.sun.istack.internal.NotNull;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 
@@ -15,11 +14,11 @@ public class Format {
         return mess.substring(mess.indexOf(" ") + 1);
     }
 
-    public static String formatMessageToString(@NotNull String format, String player, String message) {
+    public static String formatMessageToString(String format, String player, String message) {
         return format.replaceAll("%PLAYER%", player).replaceAll("%MES%", message);
     }
 
-    public static Text colorString(@NotNull String mess) {
+    public static Text colorString(String mess) {
         return Texts.fromLegacy(mess, '&');
     }
 

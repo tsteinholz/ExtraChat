@@ -33,6 +33,11 @@ public class ConfigLoader {
         File config = new File("config/ExtraChat/config.conf");
         if (!config.exists()) {
             ExtraChat.logger.warn("Configuration file not found, creating a new one.");
+            try {
+                config.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         loadConfig();
     }
@@ -128,37 +133,6 @@ public class ConfigLoader {
         }
     }
 
-
-//    public static void createConfiguration(File file) {
-//        try {
-//            new File("config/ExtraChat").mkdir();
-//            file.createNewFile();
-//        } catch (IOException e) {
-//            ExtraChat.logger.error("Unable to create configuration file.");
-//        }
-//        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
-//        CommentedConfigurationNode format = null;
-//        try {
-//            loader.createEmptyNode(ConfigurationOptions.defaults());
-//            format = loader.load();
-//            format.getNode("version").setComment("Config version").setValue("1.2");
-//            format.getNode("formatMes").setComment("Format of the chat message where %PLAYER% is the player and %MES% is the message.").setValue("<%PLAYER%> %MES%");
-//            format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.").setValue("%TAG% ");
-//            format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'").setValue("1");
-//            format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word,word' without ''").setValue("lag");
-//            format.getNode("log").getNode("enabled").setComment("Set to true to enable the chat logger, default true.").setValue(true);
-//            format.getNode("log").getNode("destination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
-//            format.getNode("wordReplacer").getNode("size").setComment("The amount of chat messages back you can fix.").setValue(10);
-//            format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
-//            format.getNode("broadcaster").getNode("enabled").setComment("Set to true to enable the broadcaster.").setValue("true");
-//            format.getNode("broadcaster").getNode("time").setComment("Time in ticks in which the broadcaster will transmit a message. (20 ticks = 1 second)").setValue(1200);
-//            format.getNode("broadcaster").getNode("format").setComment("Format of the tag that will show in front of the broadcast.").setValue(" &7[&4!&7] ");
-//            loader.save(format);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 
     public static void addWordtoBlackList(String word) {
         ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config/ExtraChat/config.conf")).build();

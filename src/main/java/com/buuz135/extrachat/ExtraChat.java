@@ -5,6 +5,7 @@ import com.buuz135.api.ExtraMetrics;
 import com.buuz135.extrachat.broadcast.BRCommand;
 import com.buuz135.extrachat.broadcast.Broadcaster;
 import com.buuz135.extrachat.commands.ExtraChatCommand;
+import com.buuz135.extrachat.commands.ShowCommand;
 import com.buuz135.extrachat.config.ConfigLoader;
 import com.buuz135.extrachat.config.JsonLoader;
 import com.buuz135.extrachat.events.PlayerChat;
@@ -36,6 +37,7 @@ public class ExtraChat {
         game = event.getGame();
         event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new ExtraChatCommand(), "ec", "extrachat");
         event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new BRCommand(), "br", "broadcast");
+        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(),new ShowCommand(),"show");
     }
 
     @Subscribe

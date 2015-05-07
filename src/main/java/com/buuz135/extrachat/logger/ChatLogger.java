@@ -36,7 +36,7 @@ public class ChatLogger {
             try {
                 if (ChatLogger.writer != null) ChatLogger.writer.close();
                 if (ChatLogger.fileTo != null) {
-                    ChatLogger.compressFile();
+                    ChatLogger.compressFile(fileTo);
                     ChatLogger.fileTo.delete();
                 }
                 writer = createPrintWriter();
@@ -58,14 +58,14 @@ public class ChatLogger {
         return new PrintWriter(fileTo);
     }
 
-    public static void compressFile() {
+    public static void compressFile(File f) {
         byte[] buffer = new byte[1024];
         try {
-            FileOutputStream fos = new FileOutputStream(fileTo.getPath().replace(".log", ".zip"));
+            FileOutputStream fos = new FileOutputStream(f.getPath().replace(".log", ".zip"));
             ZipOutputStream zos = new ZipOutputStream(fos);
-            ZipEntry ze = new ZipEntry(fileTo.getName());
+            ZipEntry ze = new ZipEntry(f.getName());
             zos.putNextEntry(ze);
-            FileInputStream in = new FileInputStream(fileTo);
+            FileInputStream in = new FileInputStream(f);
             int len;
             while ((len = in.read(buffer)) > 0) {
                 zos.write(buffer, 0, len);

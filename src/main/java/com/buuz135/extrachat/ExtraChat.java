@@ -17,6 +17,7 @@ import org.spongepowered.api.event.state.*;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
+import java.io.File;
 import java.io.IOException;
 
 
@@ -40,6 +41,12 @@ public class ExtraChat {
     @Subscribe
     public void init(InitializationEvent event) {
         ConfigLoader.initConfiguration();
+        for (File f : new File(ConfigLoader.loggerPath).listFiles()){
+            if (f.getName().contains(".log")){
+                ChatLogger.compressFile(f);
+                f.delete();
+            }
+        }
         JsonLoader.initTagJson();
         event.getGame().getEventManager().register(pluginContainer.getInstance(), new PlayerChat());
         event.getGame().getEventManager().register(pluginContainer.getInstance(), new ChatLogger());
@@ -55,7 +62,7 @@ public class ExtraChat {
     public void serverClose(ServerStoppingEvent event) {
         if (ChatLogger.writer != null) ChatLogger.writer.close();
         if (ChatLogger.fileTo != null) {
-            ChatLogger.compressFile();
+            ChatLogger.compressFile(ChatLogger.fileTo);
             ChatLogger.fileTo.delete();
         }
     }

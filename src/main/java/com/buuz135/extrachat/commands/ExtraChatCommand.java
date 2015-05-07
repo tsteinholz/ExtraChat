@@ -8,6 +8,7 @@ import com.buuz135.extrachat.perms.PermsUtils;
 import com.google.common.base.Optional;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.action.HoverAction;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.command.CommandCallable;
@@ -197,15 +198,20 @@ public class ExtraChatCommand implements CommandCallable {
     private void sendHelpMessage(CommandSource source) {
         source.sendMessage(Texts.of(TextColors.DARK_AQUA, TextStyles.STRIKETHROUGH, "*****************", TextStyles.RESET, TextStyles.BOLD,
                 TextColors.BLUE, " ExtraChat Commands ", TextStyles.RESET, TextColors.DARK_AQUA, TextStyles.STRIKETHROUGH, "*****************"));
-        source.sendMessage(Texts.of(TextColors.GREEN, "/ec reload", TextColors.GRAY, TextStyles.BOLD, " -> ", TextStyles.RESET, TextColors.GOLD,
-                "Reloads the configuration file."));
-        source.sendMessage(Texts.of(TextColors.GREEN, "/ec formatmes <format>", TextColors.GRAY, TextStyles.BOLD, " -> ", TextStyles.RESET, TextColors.GOLD,
-                "Saves the message format."));
-        source.sendMessage(Texts.of(TextColors.GREEN, "/ec tagadd <tag> <player>", TextColors.GRAY, TextStyles.BOLD, " -> ", TextStyles.RESET, TextColors.GOLD,
-                "Adds the player to the tag removing the current tag."));
-        source.sendMessage(Texts.of(TextColors.GREEN, "/ec formattag <format>", TextColors.GRAY, TextStyles.BOLD, " -> ", TextStyles.RESET, TextColors.GOLD,
-                "Saves the tag format"));
-        source.sendMessage(Texts.of(TextColors.GREEN, "/ec tagremove <player>", TextColors.GRAY, TextStyles.BOLD, " -> ", TextStyles.RESET, TextColors.GOLD,
-                "Removes the tag from a player"));
+        source.sendMessage(Texts.of(TextColors.GREEN, "/ec reload").builder().onHover( new HoverAction.ShowText(Texts.of(TextColors.GOLD,
+                "Reloads the configuration file."))).build());
+        source.sendMessage(Texts.of(TextColors.GREEN, "/ec formatmes <format>").builder().onHover( new HoverAction.ShowText(Texts.of(TextColors.GOLD,
+                "Saves the message format."))).build());
+        source.sendMessage(Texts.of(TextColors.GREEN, "/ec tagadd <tag> <player>").builder().onHover( new HoverAction.ShowText(Texts.of(TextColors.GOLD,
+                "Adds the player to the tag removing the current tag."))).build());
+         source.sendMessage(Texts.of(TextColors.GREEN, "/ec formattag <format>").builder().onHover( new HoverAction.ShowText(Texts.of(TextColors.GOLD,
+                "Saves the tag format."))).build());
+        source.sendMessage(Texts.of(TextColors.GREEN, "/ec tagremove <player>").builder().onHover(new HoverAction.ShowText(Texts.of(TextColors.GOLD,
+                "Removes the tag from the player."))).build());
+        source.sendMessage(Texts.of(TextColors.GREEN, "/ec togglereplace").builder().onHover( new HoverAction.ShowText(Texts.of(TextColors.GOLD,
+                "Toggles the replace function."))).build());
+        source.sendMessage(Texts.of(TextColors.GREEN, "/ec togglelog").builder().onHover( new HoverAction.ShowText(Texts.of(TextColors.GOLD,
+                "Toggles the log."))).build());
+
     }
 }

@@ -37,16 +37,18 @@ public class ExtraChat {
         game = event.getGame();
         event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new ExtraChatCommand(), "ec", "extrachat");
         event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new BRCommand(), "br", "broadcast");
-        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(),new ShowCommand(),"show");
+        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new ShowCommand(), "show");
     }
 
     @Subscribe
     public void init(InitializationEvent event) {
         ConfigLoader.initConfiguration();
-        for (File f : new File(ConfigLoader.loggerPath).listFiles()){
-            if (f.getName().contains(".log")){
-                ChatLogger.compressFile(f);
-                f.delete();
+        if (new File(ConfigLoader.loggerPath).exists()) {
+            for (File f : new File(ConfigLoader.loggerPath).listFiles()) {
+                if (f.getName().contains(".log")) {
+                    ChatLogger.compressFile(f);
+                    f.delete();
+                }
             }
         }
         JsonLoader.initTagJson();
@@ -70,13 +72,13 @@ public class ExtraChat {
     }
 
     @Subscribe
-    public void serverStart(ServerStartedEvent event){
+    public void serverStart(ServerStartedEvent event) {
         try {
-            ExtraMetrics metrics = new ExtraMetrics("ExtraChat","1.3",event.getGame());
+            ExtraMetrics metrics = new ExtraMetrics("ExtraChat", "1.3", event.getGame());
             metrics.start();
-            if (!metrics.isOptOut()){
+            if (!metrics.isOptOut()) {
                 logger.info("Metrics module enabled.");
-            }else{
+            } else {
                 logger.info("Metrics module disabled.");
             }
         } catch (IOException e) {

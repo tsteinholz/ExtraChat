@@ -11,7 +11,7 @@ public class ExtraMetrics extends Metrics {
 
     private Game game;
 
-    public ExtraMetrics(String pluginName, String pluginVersion,Game game) throws IOException {
+    public ExtraMetrics(String pluginName, String pluginVersion, Game game) throws IOException {
         super(pluginName, pluginVersion);
         this.game = game;
     }

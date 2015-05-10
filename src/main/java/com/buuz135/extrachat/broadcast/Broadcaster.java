@@ -20,7 +20,7 @@ public class Broadcaster {
         task = ExtraChat.game.getSyncScheduler().runRepeatingTask(ExtraChat.pluginContainer.getInstance(), new Runnable() {
             @Override
             public void run() {
-                if (ExtraChat.game.getServer().getOnlinePlayers().size() == 0) return;
+                if (ExtraChat.game.getServer().getOnlinePlayers().size() == 0 || broadcasts.size() == 0) return;
                 ExtraChat.game.getServer().broadcastMessage(ConfigLoader.broadcastTag.builder()
                         .append(broadcasts.get(rn.nextInt(broadcasts.size()))).build());
             }

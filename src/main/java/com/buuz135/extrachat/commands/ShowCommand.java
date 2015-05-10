@@ -14,16 +14,16 @@ import org.spongepowered.api.util.command.CommandSource;
 
 import java.util.List;
 
-public class ShowCommand implements CommandCallable{
+public class ShowCommand implements CommandCallable {
     @Override
     public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
-        if (ExtraChat.game.getServer().getPlayer(source.getName()).get().getItemInHand().isPresent()){
+        if (ExtraChat.game.getServer().getPlayer(source.getName()).get().getItemInHand().isPresent()) {
             ExtraChat.game.getServer().broadcastMessage(Texts.of(source.getName() + " shows: ").builder()
                     .append(Texts.of("[", Texts.of(ExtraChat.game.getServer().getPlayer(source.getName()).get().getItemInHand().get())
                             , TextColors.WHITE, "]").builder().onHover(new HoverAction.ShowItem(ExtraChat.game.getServer()
                             .getPlayer(source.getName()).get().getItemInHand().get())).build()).build());
-        }else{
-            source.sendMessage(Texts.of(TextColors.DARK_RED,"You don't have an item in your hand."));
+        } else {
+            source.sendMessage(Texts.of(TextColors.DARK_RED, "You don't have an item in your hand."));
         }
         return Optional.of(CommandResult.success());
     }

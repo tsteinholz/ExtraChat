@@ -65,11 +65,11 @@ public class ConfigLoader {
             }
             String words = format.getNode("blacklist").getNode("words").getString();
             if (words == null) {
-                format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word,word' without ''").setValue("lag");
+                format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word-word' without ''").setValue("lag");
                 words = format.getNode("blacklist").getNode("words").getString();
             }
             blacklisted = new ArrayList<String>();
-            for (String s : words.split(",")) {
+            for (String s : words.split("-")) {
                 blacklisted.add(s);
             }
             loggerEnabled = format.getNode("log").getNode("enabled").getBoolean();

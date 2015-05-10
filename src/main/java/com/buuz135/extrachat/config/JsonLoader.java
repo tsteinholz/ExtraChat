@@ -183,26 +183,8 @@ public class JsonLoader {
             reader.endArray();
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            ExtraChat.logger.warn("Broadcast json empty");
         }
     }
 
-    public static void insertBroadcast(String br) {
-        try {
-            JsonWriter writer = new JsonWriter(new FileWriter("config/ExtraChat/broadcasts.json"));
-            writer.setIndent("    ");
-            writer.beginArray();
-            writer.beginObject().name("test");
-            writer.beginArray();
-            writer.beginObject().name("message").value("testmessage").endObject();
-            writer.beginObject().name("onClick").beginObject().name("openURL").value("www.google.com").endObject().endObject();
-            writer.beginObject().name("onHover").value("some text here").endObject();
-            writer.endArray();
-            writer.endObject();
-            writer.endArray();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

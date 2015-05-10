@@ -5,12 +5,13 @@ import com.buuz135.api.Format;
 import com.buuz135.extrachat.ExtraChat;
 import com.buuz135.extrachat.Tag;
 import com.buuz135.extrachat.config.ConfigLoader;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
 import org.spongepowered.api.text.Texts;
 
 public class PlayerChat {
-    @Subscribe
+    @Subscribe(order = Order.LATE)
     public void onChat(PlayerChatEvent event) {
         String tag = "";
         for (Tag temp : Tag.tags) {

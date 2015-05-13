@@ -21,7 +21,7 @@ public class PlayerChat {
                 tag = ConfigLoader.formatTag.replace("%TAG%", temp.getName());
             }
         }
-        if (event.getEntity().getData(DisplayNameData.class).get().getDisplayName() == null){
+        if (Texts.toPlain(event.getEntity().getData(DisplayNameData.class).get().getDisplayName()).equals("")){
             name = event.getEntity().getName();
         }else{
             name = Texts.toLegacy(event.getEntity().getData(DisplayNameData.class).get().getDisplayName(), '&');

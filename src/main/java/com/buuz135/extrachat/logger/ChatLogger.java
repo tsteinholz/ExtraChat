@@ -9,6 +9,7 @@ import org.spongepowered.api.event.entity.player.PlayerDeathEvent;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
 import org.spongepowered.api.event.message.CommandEvent;
+import org.spongepowered.api.event.statistic.AchievementEvent;
 import org.spongepowered.api.text.Texts;
 
 import java.io.*;
@@ -52,6 +53,10 @@ public class ChatLogger {
     public void playerDeath(PlayerDeathEvent event) {
         if (event.getNewMessage() != null) insertLine("[DEATH] " + Texts.toPlain(event.getNewMessage()));
         else if (event.getMessage() != null) insertLine("[DEATH] " + Texts.toPlain(event.getMessage()));
+    }
+    @Subscribe(order = Order.LAST)
+    public void playerAchiev(AchievementEvent event) {
+       insertLine("[ACHIE] "+ "Player "+event.getEntity().getName()+" got the achievement "+event.getAchievement().getName());
     }
 
     private static PrintWriter createPrintWriter() throws IOException {

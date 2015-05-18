@@ -28,6 +28,7 @@ public class ConfigLoader {
     public static int broadcastTime;
     public static Text broadcastTag;
     public static boolean broadcastEnabled;
+    public static String privateMessageFormat;
 
     public static void initConfiguration() {
         File folder = new File("config"+File.separator+"ExtraChat");
@@ -109,6 +110,13 @@ public class ConfigLoader {
                 format.getNode("broadcaster").getNode("format").setComment("Format of the tag that will show in front of the broadcast.").setValue(" &7[&4!&7] ");
             }
             broadcastTag = Texts.fromLegacy(format.getNode("broadcaster").getNode("format").getString(), '&');
+            privateMessageFormat = format.getNode("privateMessage").getNode("format").getString();
+            if (privateMessageFormat == null){
+                format.getNode("privateMessage").getNode("format").setComment("Format of the private message where %SENDER%" +
+                        " is the player who send the message, %RECI% is the player who gets it, and %MES% is the actual message." );
+                format.getNode("privateMessage").getNode("format").setValue("&7[&e%SENDER% &6-> &e%RECI%&7]&f: %MES%");
+                privateMessageFormat = format.getNode("privateMessage").getNode("format").getString();
+            }
 
             loader.save(format);
         } catch (IOException e) {

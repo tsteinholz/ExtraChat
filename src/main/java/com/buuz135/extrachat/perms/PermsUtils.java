@@ -14,4 +14,5 @@ public class PermsUtils {
     public static final String TOGGLEREPLACE = "extrachat.command.togglereplace";
     public static final String MAIN = "extrachat.command.*";
     public static final String SHOW = "extrachat.command.show";
+    public static final String TELL = "extrachat.command.tell";
 }

@@ -66,9 +66,17 @@ public class CommandRegister {
         CommandSpec show = CommandSpec.builder().description(Texts.of(TextColors.GOLD,
                 "Shows the current item in your hand to the rest of the players.")).permission(PermsUtils.SHOW).executor(new ShowCommand())
                 .build();
+        CommandSpec privateMes = CommandSpec.builder().description(Texts.of(TextColors.GOLD,
+                "Sends a private message to the player")).executor(new PrivateMessage(game))
+                .arguments(GenericArguments.player(Texts.of("playerDest"), game), GenericArguments.remainingJoinedStrings(Texts.of("message"))).build();
+        CommandSpec reply = CommandSpec.builder().description(Texts.of(TextColors.GOLD,
+                "Replys the last message")).arguments(GenericArguments.remainingJoinedStrings(Texts.of("message")))
+                .executor(new ReplyPrivate(game)).build();
 
         game.getCommandDispatcher().register(plugin, main, "ec", "extrachat");
         game.getCommandDispatcher().register(plugin,broadcast,"br","ecbr","broadcast");
         game.getCommandDispatcher().register(plugin,show,"show");
+        game.getCommandDispatcher().register(plugin,privateMes,"tell","w","msg");
+        game.getCommandDispatcher().register(plugin,reply,"r","reply");
     }
 }

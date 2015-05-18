@@ -29,14 +29,18 @@ public class ChatLogger {
 
     @Subscribe(order = Order.LAST)
     public void playerJoin(PlayerJoinEvent event) {
-        if (event.getJoinMessage() != null)
-            insertLine("[JOIN] " + Texts.toPlain(event.getJoinMessage()));
+        if (event.getNewMessage() != null){
+            insertLine("[JOIN] " + Texts.toPlain(event.getNewMessage()));
+        }
+        else if (event.getMessage() != null){
+            insertLine("[JOIN] " + Texts.toPlain(event.getMessage()));
+        }
     }
 
     @Subscribe(order = Order.LAST)
     public void playerQuit(PlayerQuitEvent event) {
-        if (event.getQuitMessage() != null)
-            insertLine("[QUIT] " + Texts.toPlain(event.getQuitMessage()));
+        if (event.getNewMessage() != null) insertLine("[QUIT] " + Texts.toPlain(event.getNewMessage()));
+        else if (event.getMessage() != null) insertLine("[QUIT] " + Texts.toPlain(event.getMessage()));
     }
 
     @Subscribe(order = Order.LAST)
@@ -46,7 +50,8 @@ public class ChatLogger {
 
     @Subscribe(order = Order.LAST)
     public void playerDeath(PlayerDeathEvent event) {
-        insertLine("[DEATH] " + Texts.toPlain(event.getDeathMessage()));
+        if (event.getNewMessage() != null) insertLine("[DEATH] " + Texts.toPlain(event.getNewMessage()));
+        else if (event.getMessage() != null) insertLine("[DEATH] " + Texts.toPlain(event.getMessage()));
     }
 
     private static PrintWriter createPrintWriter() throws IOException {

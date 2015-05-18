@@ -38,7 +38,7 @@ public class PlayerChat {
             event.setCancelled(true);
         } else {
             ExtraChat.replaceLogger.insertLog(event.getEntity().getName(), Format.getRawMessage(Texts.toLegacy(event.getMessage(), '&')));
-            event.setMessage(Format.colorString("&r" + tag + mess));
+            event.setNewMessage(Format.colorString("&r" + tag + mess));
         }
     }
 }

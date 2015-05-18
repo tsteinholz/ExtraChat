@@ -28,25 +28,25 @@ public class ChatLogger {
     }
 
     @Subscribe(order = Order.LAST)
-    public void playerJoin(PlayerJoinEvent event){
+    public void playerJoin(PlayerJoinEvent event) {
         if (event.getJoinMessage() != null)
-        insertLine("[JOIN] "+Texts.toPlain(event.getJoinMessage()));
+            insertLine("[JOIN] " + Texts.toPlain(event.getJoinMessage()));
     }
 
     @Subscribe(order = Order.LAST)
-    public void playerQuit(PlayerQuitEvent event){
+    public void playerQuit(PlayerQuitEvent event) {
         if (event.getQuitMessage() != null)
-        insertLine("[QUIT] "+Texts.toPlain(event.getQuitMessage()));
+            insertLine("[QUIT] " + Texts.toPlain(event.getQuitMessage()));
     }
 
     @Subscribe(order = Order.LAST)
-    public void playerCommand(CommandEvent event){
-        insertLine("[CMD] Player "+event.getSource().getName()+" executed the command /"+event.getCommand()+" "+ event.getArguments());
+    public void playerCommand(CommandEvent event) {
+        insertLine("[CMD] Player " + event.getSource().getName() + " executed the command /" + event.getCommand() + " " + event.getArguments());
     }
 
     @Subscribe(order = Order.LAST)
-    public void playerDeath(PlayerDeathEvent event){
-        insertLine("[DEATH] "+Texts.toPlain(event.getDeathMessage()));
+    public void playerDeath(PlayerDeathEvent event) {
+        insertLine("[DEATH] " + Texts.toPlain(event.getDeathMessage()));
     }
 
     private static PrintWriter createPrintWriter() throws IOException {
@@ -55,7 +55,7 @@ public class ChatLogger {
             folder.mkdir();
         }
         Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-M-d H-m");
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-M-d HH-mm");
         fileTo = new File(ConfigLoader.loggerPath + File.separator + sdf.format(d) + ".log");
         fileTo.createNewFile();
         return new PrintWriter(fileTo);
@@ -80,7 +80,8 @@ public class ChatLogger {
             ex.printStackTrace();
         }
     }
-    public static void insertLine(String line){
+
+    public static void insertLine(String line) {
         if (!ConfigLoader.loggerEnabled) return;
         if (writer == null) {
             try {
@@ -90,7 +91,7 @@ public class ChatLogger {
             }
         }
         Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("d-M-YYY H:m:s");
+        SimpleDateFormat sdf = new SimpleDateFormat("d-M-YYY HH:mm:ss");
         String format = "[" + sdf.format(d) + "]: ";
         writer.println(format + line);
         writer.flush();

@@ -30,7 +30,9 @@ public class ConfigLoader {
     public static boolean broadcastEnabled;
 
     public static void initConfiguration() {
-        File config = new File("config/ExtraChat/config.conf");
+        File folder = new File("config"+File.separator+"ExtraChat");
+        if (!folder.exists()) folder.mkdir();
+        File config = new File("config"+File.separator+"ExtraChat"+File.separator+"config.conf");
         if (!config.exists()) {
             ExtraChat.logger.warn("Configuration file not found, creating a new one.");
             try {
@@ -43,7 +45,7 @@ public class ConfigLoader {
     }
 
     public static void loadConfig() {
-        File config = new File("config/ExtraChat/config.conf");
+        File config = new File("config"+File.separator+"ExtraChat"+File.separator+"config.conf");
         ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(config).build();
         try {
             CommentedConfigurationNode format = null;
@@ -115,7 +117,7 @@ public class ConfigLoader {
     }
 
     public static void saveConfig(String formated, String node) {
-        File file = new File("config/ExtraChat/config.conf");
+        File file = new File("config"+File.separator+"ExtraChat"+File.separator+"config.conf");
         ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
         CommentedConfigurationNode format = null;
         try {
@@ -135,7 +137,7 @@ public class ConfigLoader {
 
 
     public static void addWordtoBlackList(String word) {
-        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config/ExtraChat/config.conf")).build();
+        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config"+File.separator+"ExtraChat"+File.separator+"config.conf")).build();
         CommentedConfigurationNode format = null;
         try {
             loader.createEmptyNode(ConfigurationOptions.defaults());
@@ -150,7 +152,7 @@ public class ConfigLoader {
 
     public static void toggleLog() {
         loggerEnabled = !loggerEnabled;
-        File file = new File("config/ExtraChat/config.conf");
+        File file = new File("config"+File.separator+"ExtraChat"+File.separator+"config.conf");
         ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
         CommentedConfigurationNode format = null;
         try {
@@ -164,7 +166,7 @@ public class ConfigLoader {
 
     public static void toggleReplace() {
         replaceEnabled = !replaceEnabled;
-        File file = new File("config/ExtraChat/config.conf");
+        File file = new File("config"+File.separator+"ExtraChat"+File.separator+"config.conf");
         ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
         CommentedConfigurationNode format = null;
         try {
@@ -177,7 +179,7 @@ public class ConfigLoader {
     }
 
     public static void removeWordFromBlackList(String word) {
-        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config/ExtraChat/config.conf")).build();
+        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config"+File.separator+"ExtraChat"+File.separator+"config.conf")).build();
         CommentedConfigurationNode format = null;
         try {
             loader.createEmptyNode(ConfigurationOptions.defaults());

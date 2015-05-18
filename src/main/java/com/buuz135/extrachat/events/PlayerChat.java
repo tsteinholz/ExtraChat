@@ -5,7 +5,7 @@ import com.buuz135.api.Format;
 import com.buuz135.extrachat.ExtraChat;
 import com.buuz135.extrachat.Tag;
 import com.buuz135.extrachat.config.ConfigLoader;
-import org.spongepowered.api.data.manipulators.DisplayNameData;
+import org.spongepowered.api.data.manipulator.DisplayNameData;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
 import org.spongepowered.api.text.Texts;
@@ -21,9 +21,10 @@ public class PlayerChat {
                 tag = ConfigLoader.formatTag.replace("%TAG%", temp.getName());
             }
         }
-        if (Texts.toPlain(event.getEntity().getData(DisplayNameData.class).get().getDisplayName()).equals("")){
+        if (!event.getEntity().getData(DisplayNameData.class).isPresent() ||
+                Texts.toPlain(event.getEntity().getData(DisplayNameData.class).get().getDisplayName()).equals("")) {
             name = event.getEntity().getName();
-        }else{
+        } else if (event.getEntity().getData(DisplayNameData.class).isPresent()){
             name = Texts.toLegacy(event.getEntity().getData(DisplayNameData.class).get().getDisplayName(), '&');
         }
         String mess = Format.formatMessageToString(ConfigLoader.formatMes, name, Format.getRawMessage(Texts.toLegacy(event.getMessage(), '&')));
@@ -36,7 +37,7 @@ public class PlayerChat {
             ExtraChat.replaceLogger.fixMsg(event.getEntity().getName(), Format.getRawMessage(Texts.toLegacy(event.getMessage(), '&')));
             event.setCancelled(true);
         } else {
-            ExtraChat.replaceLogger.insertLog(event.getEntity().getName(), Format.getRawMessage(Texts.toLegacy(event.getMessage(),'&')));
+            ExtraChat.replaceLogger.insertLog(event.getEntity().getName(), Format.getRawMessage(Texts.toLegacy(event.getMessage(), '&')));
             event.setMessage(Format.colorString("&r" + tag + mess));
         }
     }

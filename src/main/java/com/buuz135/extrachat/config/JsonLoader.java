@@ -1,9 +1,11 @@
 package com.buuz135.extrachat.config;
 
 
+import com.buuz135.extrachat.ChatChannel;
 import com.buuz135.extrachat.ExtraChat;
 import com.buuz135.extrachat.Tag;
 import com.buuz135.extrachat.broadcast.Broadcaster;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.spongepowered.api.text.TextBuilder;
@@ -11,11 +13,9 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.ClickAction;
 import org.spongepowered.api.text.action.HoverAction;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.UUID;
 
 public class JsonLoader {
@@ -23,6 +23,7 @@ public class JsonLoader {
     public static void initTagJson() {
         File tagsjson = new File("config/ExtraChat/tags.json");
         File broadcastjson = new File("config/ExtraChat/broadcasts.json");
+        File chatGroups = new File("config"+File.separator+"ExtraChat"+File.separator+"chatGroups.json");
         if (!tagsjson.exists()) {
             try {
                 tagsjson.createNewFile();
@@ -38,7 +39,17 @@ public class JsonLoader {
                 e.printStackTrace();
             }
         }
-        //insertBroadcast("");
+        if (!chatGroups.exists()){
+            try {
+                chatGroups.createNewFile();
+                ChatChannel.channels.add(new ChatChannel("global","G",-1,true,false,""));
+                ChatChannel.channels.add(new ChatChannel("local","L",200,true,false,""));
+                updateChatGroups();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        readChatGroups();
         readBroadcasts();
     }
 
@@ -187,4 +198,42 @@ public class JsonLoader {
         }
     }
 
+    public static void readChatGroups(){
+        try {
+            JsonArray array = new JsonParser().parse(new JsonReader(new FileReader("config"+File.separator+"ExtraChat"+File.separator
+            +"chatGroups.json"))).getAsJsonArray();
+            Iterator<JsonElement> it = array.iterator();
+            while (it.hasNext()){
+                JsonObject object = it.next().getAsJsonObject();
+                ChatChannel.channels.add(new ChatChannel(object.get("name").getAsString(), object.get("tag").getAsString(),
+                        object.get("radius").getAsInt(), object.get("default").getAsBoolean(), object.get("private").getAsBoolean(),
+                        object.get("pass").getAsString()));
+            }
+            ExtraChat.logger.info("Total channels: "+ChatChannel.channels.size());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateChatGroups(){
+        JsonArray array = new JsonArray();
+        for (ChatChannel chat : ChatChannel.channels){
+            JsonObject obj = new JsonObject();
+            obj.addProperty("name", chat.getName());
+            obj.addProperty("tag",chat.getPass());
+            obj.addProperty("radius",chat.getRadius());
+            obj.addProperty("default",chat.isDefault());
+            obj.addProperty("private",chat.isPrivate());
+            obj.addProperty("pass",chat.getPass());
+            array.add(obj);
+        }
+        try {
+            FileOutputStream outputStream = new FileOutputStream(new File("config"+File.separator+"ExtraChat"+File.separator+"chatGroups.json"));
+            Gson gs = new GsonBuilder().setPrettyPrinting().create();
+            outputStream.write(gs.toJson(array).getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

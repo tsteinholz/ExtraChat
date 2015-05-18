@@ -29,6 +29,7 @@ public class ConfigLoader {
     public static Text broadcastTag;
     public static boolean broadcastEnabled;
     public static String privateMessageFormat;
+    public static boolean areaChat;
 
     public static void initConfiguration() {
         File folder = new File("config"+File.separator+"ExtraChat");
@@ -116,6 +117,12 @@ public class ConfigLoader {
                         " is the player who send the message, %RECI% is the player who gets it, and %MES% is the actual message." );
                 format.getNode("privateMessage").getNode("format").setValue("&7[&e%SENDER% &6-> &e%RECI%&7]&f: %MES%");
                 privateMessageFormat = format.getNode("privateMessage").getNode("format").getString();
+            }
+            if (!format.getNode("chatChannel").getNode("enabled").getComment().isPresent()){
+                format.getNode("chatChannel").getNode("enabled").setValue(true);
+                format.getNode("chatChannel").getNode("enabled").setComment("Set to true to enable the chat groups");
+                format.getNode("chatChannel").getNode("chatTagFormat").setValue("[%TAG%]");
+                format.getNode("chatChannel").getNode("chatTagFormat").setComment("The format of the tag where %TAG% is the channel tag.");
             }
 
             loader.save(format);

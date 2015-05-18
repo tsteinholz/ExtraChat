@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-@Plugin(id = "EC", name = "ExtraChat", version = "1.3")
+@Plugin(id = "EC", name = "ExtraChat", version = "1.4")
 public class ExtraChat {
     public static Logger logger;
     public static PluginContainer pluginContainer;
@@ -70,7 +70,7 @@ public class ExtraChat {
     @Subscribe
     public void serverStart(ServerStartedEvent event) {
         try {
-            ExtraMetrics metrics = new ExtraMetrics("ExtraChat", "1.3", event.getGame());
+            ExtraMetrics metrics = new ExtraMetrics("ExtraChat", "1.4", event.getGame());
             metrics.start();
             if (!metrics.isOptOut()) {
                 logger.info("Metrics module enabled.");

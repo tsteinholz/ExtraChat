@@ -51,7 +51,7 @@ public class CommandRegister {
         subcommands.put(Arrays.asList("tagremove"), tagremove);
         subcommands.put(Arrays.asList("formattag"), formattag);
         subcommands.put(Arrays.asList("togglelog"), togglelog);
-        subcommands.put(Arrays.asList("togglereplace"),togglereplace);
+        subcommands.put(Arrays.asList("togglereplace"), togglereplace);
 
         CommandSpec main = CommandSpec.builder().description(Texts.of(TextColors.GOLD,
                 "Main ExtraChat command.")).permission(PermsUtils.MAIN).executor(new CommandExecutor() {
@@ -74,9 +74,9 @@ public class CommandRegister {
                 .executor(new ReplyPrivate(game)).build();
 
         game.getCommandDispatcher().register(plugin, main, "ec", "extrachat");
-        game.getCommandDispatcher().register(plugin,broadcast,"br","ecbr","broadcast");
-        game.getCommandDispatcher().register(plugin,show,"show");
-        game.getCommandDispatcher().register(plugin,privateMes,"tell","w","msg");
-        game.getCommandDispatcher().register(plugin,reply,"r","reply");
+        game.getCommandDispatcher().register(plugin, broadcast, "br", "ecbr", "broadcast");
+        game.getCommandDispatcher().register(plugin, show, "show");
+        game.getCommandDispatcher().register(plugin, privateMes, "tell", "w", "msg");
+        game.getCommandDispatcher().register(plugin, reply, "r", "reply");
     }
 }

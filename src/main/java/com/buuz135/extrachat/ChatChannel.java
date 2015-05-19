@@ -10,7 +10,6 @@ public class ChatChannel {
     public static List<ChatChannel> channels = new ArrayList<ChatChannel>();
 
 
-
     private String name;
     private String tag;
     private int radius;

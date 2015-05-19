@@ -16,8 +16,8 @@ public class ShowCommand implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource source, CommandContext args) throws CommandException {
         if (ExtraChat.game.getServer().getPlayer(source.getName()).get().getItemInHand().isPresent()) {
-            ExtraChat.game.getServer().broadcastMessage(Texts.of(TextStyles.BOLD,source.getName(),TextStyles.RESET," shows this ").builder()
-                    .append(Texts.of(TextColors.DARK_AQUA, "item",TextColors.WHITE,".").builder().onHover(new HoverAction.ShowItem(ExtraChat.game.getServer()
+            ExtraChat.game.getServer().broadcastMessage(Texts.of(TextStyles.BOLD, source.getName(), TextStyles.RESET, " shows this ").builder()
+                    .append(Texts.of(TextColors.DARK_AQUA, "item", TextColors.WHITE, ".").builder().onHover(new HoverAction.ShowItem(ExtraChat.game.getServer()
                             .getPlayer(source.getName()).get().getItemInHand().get())).build()).build());
         } else {
             source.sendMessage(Texts.of(TextColors.DARK_RED, "You don't have an item in your hand."));

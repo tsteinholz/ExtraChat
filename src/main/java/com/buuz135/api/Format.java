@@ -41,8 +41,8 @@ public class Format {
         return s.charAt(rn.nextInt(s.length()));
     }
 
-    public static Text formatPrivateMessage(String format,String message, String sender, String reciever){
-        return colorString(format.replaceAll("%SENDER%",sender).replaceAll("%RECI%",reciever).replaceAll("%MES%",message));
+    public static Text formatPrivateMessage(String format, String message, String sender, String reciever) {
+        return colorString(format.replaceAll("%SENDER%", sender).replaceAll("%RECI%", reciever).replaceAll("%MES%", message));
     }
 
 }

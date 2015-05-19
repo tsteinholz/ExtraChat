@@ -13,18 +13,24 @@ import org.spongepowered.api.text.Texts;
 public class PlayerChat {
     @Subscribe
     public void onChat(PlayerChatEvent event) {
-        event.getMessage();
-        String tag = "";
+        String tag = null;
         String name = "";
         for (Tag temp : Tag.tags) {
             if (temp.getPlayers().containsKey(event.getEntity().getUniqueId())) {
                 tag = ConfigLoader.formatTag.replace("%TAG%", temp.getName());
             }
         }
+        if (tag == null) {
+            for (Tag temp : Tag.tags) {
+                if (temp.isDefault()) {
+                    tag = ConfigLoader.formatTag.replace("%TAG%", temp.getName());
+                }
+            }
+        }
         if (!event.getEntity().getData(DisplayNameData.class).isPresent() ||
                 Texts.toPlain(event.getEntity().getData(DisplayNameData.class).get().getDisplayName()).equals("")) {
             name = event.getEntity().getName();
-        } else if (event.getEntity().getData(DisplayNameData.class).isPresent()){
+        } else if (event.getEntity().getData(DisplayNameData.class).isPresent()) {
             name = Texts.toLegacy(event.getEntity().getData(DisplayNameData.class).get().getDisplayName(), '&');
         }
         String mess = Format.formatMessageToString(ConfigLoader.formatMes, name, Format.getRawMessage(Texts.toLegacy(event.getMessage(), '&')));
@@ -41,4 +47,5 @@ public class PlayerChat {
             event.setNewMessage(Format.colorString("&r" + tag + mess));
         }
     }
+
 }

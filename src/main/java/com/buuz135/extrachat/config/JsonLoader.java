@@ -19,11 +19,12 @@ import java.util.Iterator;
 import java.util.UUID;
 
 public class JsonLoader {
+    private static String path = "config" + File.separator + "ExtraChat" + File.separator;
+    private static File tagsjson = new File(path + "tags.json");
+    private static File broadcastjson = new File(path + "broadcasts.json");
+    private static File chatGroups = new File(path + "chatGroups.json");
 
-    public static void initTagJson() {
-        File tagsjson = new File("config/ExtraChat/tags.json");
-        File broadcastjson = new File("config/ExtraChat/broadcasts.json");
-        File chatGroups = new File("config"+File.separator+"ExtraChat"+File.separator+"chatGroups.json");
+    public static void initJson() {
         if (!tagsjson.exists()) {
             try {
                 tagsjson.createNewFile();
@@ -39,11 +40,11 @@ public class JsonLoader {
                 e.printStackTrace();
             }
         }
-        if (!chatGroups.exists()){
+        if (!chatGroups.exists()) {
             try {
                 chatGroups.createNewFile();
-                ChatChannel.channels.add(new ChatChannel("global","G",-1,true,false,""));
-                ChatChannel.channels.add(new ChatChannel("local","L",200,true,false,""));
+                ChatChannel.channels.add(new ChatChannel("global", "G", -1, true, false, ""));
+                ChatChannel.channels.add(new ChatChannel("local", "L", 200, true, false, ""));
                 updateChatGroups();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -62,175 +63,134 @@ public class JsonLoader {
             }
         }
         Tag.getTagByName(tag).getPlayers().put(java.util.UUID.fromString(UUID), name);
-        try {
-            writer = new JsonWriter(new FileWriter("config/ExtraChat/tags.json"));
-            writer.setIndent("    ");
-            writer.beginArray();
-            for (Tag temp : Tag.tags) {
-                if (!temp.getPlayers().isEmpty()) {
-                    writer.beginObject();
-                    writer.name(temp.getName());
-                    writer.beginArray();
-                    for (UUID uuid : temp.getPlayers().keySet()) {
-                        writer.beginObject();
-                        writer.name(temp.getPlayers().get(uuid));
-                        writer.value(uuid.toString());
-                        writer.endObject();
-                    }
-                    writer.endArray();
-                    writer.endObject();
-                }
-            }
-            writer.endArray();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        updateTags();
     }
 
     public static void readTagsJson() {
         try {
-            JsonReader reader = new JsonReader(new FileReader("config/ExtraChat/tags.json"));
-            if (!reader.hasNext()) return;
-            reader.beginArray();
-            while (reader.hasNext()) {
-                reader.beginObject();
-                while (reader.hasNext()) {
-                    Tag tag = new Tag(reader.nextName());
-                    reader.beginArray();
-                    while (reader.hasNext()) {
-                        reader.beginObject();
-                        String name = reader.nextName();
-                        tag.getPlayers().put(UUID.fromString(reader.nextString()), name);
-                        reader.endObject();
+            JsonArray array = new JsonParser().parse(new JsonReader(new FileReader(tagsjson))).getAsJsonArray();
+            Iterator<JsonElement> it = array.iterator();
+            while (it.hasNext()) {
+                JsonObject object = it.next().getAsJsonObject();
+                Tag t = new Tag(object.get("name").getAsString(), object.get("default").getAsBoolean());
+                if (!object.get("default").getAsBoolean()) {
+                    Iterator<JsonElement> it2 = object.getAsJsonArray("players").iterator();
+                    while (it2.hasNext()) {
+                        JsonObject player = it2.next().getAsJsonObject();
+                        t.getPlayers().put(UUID.fromString(player.get("playerUUID").getAsString()),
+                                player.get("playerName").getAsString());
                     }
-                    reader.endArray();
-                    Tag.tags.add(tag);
                 }
-                reader.endObject();
+                Tag.tags.add(t);
             }
-            reader.endArray();
-            reader.close();
-        } catch (IOException e) {
-            ExtraChat.logger.warn("Tag json empty");
+            int numDef = 0;
+            for (Tag t : Tag.tags) {
+                if (t.isDefault()) ++numDef;
+            }
+            if (numDef > 1) ExtraChat.logger.warn("There is more than 1 default tag, this will cause problems.");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e2) {
+            ExtraChat.logger.info("Tags Json Empty");
         }
+
     }
 
     public static void removeTag(String UUID) {
-        JsonWriter writer = null;
         for (Tag t : Tag.tags) {
             if (t.getPlayers().containsKey(java.util.UUID.fromString(UUID))) {
                 t.getPlayers().remove(java.util.UUID.fromString(UUID));
                 break;
             }
         }
-        try {
-            writer = new JsonWriter(new FileWriter("config/ExtraChat/tags.json"));
-            writer.setIndent("    ");
-            writer.beginArray();
-            for (Tag temp : Tag.tags) {
-                if (!temp.getPlayers().isEmpty()) {
-                    writer.beginObject();
-                    writer.name(temp.getName());
-                    writer.beginArray();
-                    for (UUID uuid : temp.getPlayers().keySet()) {
-                        writer.beginObject();
-                        writer.name(temp.getPlayers().get(uuid));
-                        writer.value(uuid.toString());
-                        writer.endObject();
-                    }
-                    writer.endArray();
-                    writer.endObject();
-                }
-            }
-            writer.endArray();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        updateTags();
     }
 
     public static void readBroadcasts() {
         try {
-            JsonReader reader = new JsonReader(new FileReader("config/ExtraChat/broadcasts.json"));
-            reader.setLenient(true);
-            reader.beginArray();
-            while (reader.hasNext()) {
-                reader.beginObject();
-                TextBuilder builder = Texts.fromLegacy(reader.nextName(), '&').builder();
-                String onClick = "";
-                String hover = "";
-                reader.beginArray();
-                reader.beginObject();
-                reader.nextName();
-                reader.beginObject();
-                onClick = reader.nextName();
-                if (!onClick.equals("null")) {
-                    if (onClick.equals("openURL")) {
-                        builder.onClick(new ClickAction.OpenUrl(new URL(reader.nextString())));
-                    }
-                    if (onClick.equals("suggestCommand")) {
-                        builder.onClick(new ClickAction.SuggestCommand(reader.nextString()));
-                    }
-                    if (onClick.equals("runCommand")) {
-                        builder.onClick(new ClickAction.RunCommand(reader.nextString()));
-                    }
-                } else {
-                    reader.nextString();
+            JsonArray array = new JsonParser().parse(new JsonReader(new FileReader(broadcastjson))).getAsJsonArray();
+            Iterator<JsonElement> it = array.iterator();
+            while (it.hasNext()){
+                JsonObject obj = it.next().getAsJsonObject();
+                TextBuilder builder = Texts.fromLegacy(obj.get("broadcast").getAsString(),'&').builder();
+                JsonObject event = obj.getAsJsonObject("clickEvent");
+                if (event.has("openURL")) {
+                    builder.onClick(new ClickAction.OpenUrl(new URL(event.get("openURL").getAsString())));
                 }
-                reader.endObject();
-                reader.endObject();
-                reader.beginObject();
-                reader.nextName();
-                hover = reader.nextString();
-                if (!hover.equals("null")) {
-                    builder.onHover(new HoverAction.ShowText(Texts.fromLegacy(hover)));
+                if (event.has("suggestCommand")) {
+                    builder.onClick(new ClickAction.SuggestCommand(event.get("suggestCommand").getAsString()));
                 }
-                reader.endObject();
-                reader.endArray();
-                reader.endObject();
+                if (event.has("runCommand")) {
+                    builder.onClick(new ClickAction.RunCommand(event.get("runCommand").getAsString()));
+                }
+                if (obj.has("hoverText")){
+                    builder.onHover(new HoverAction.ShowText(Texts.fromLegacy(obj.get("hoverText").getAsString(),'&')));
+                }
                 Broadcaster.broadcasts.add(builder.build());
             }
-            reader.endArray();
-            reader.close();
         } catch (IOException e) {
             ExtraChat.logger.warn("Broadcast json empty");
+            e.printStackTrace();
         }
     }
 
-    public static void readChatGroups(){
+    public static void readChatGroups() {
         try {
-            JsonArray array = new JsonParser().parse(new JsonReader(new FileReader("config"+File.separator+"ExtraChat"+File.separator
-            +"chatGroups.json"))).getAsJsonArray();
+            JsonArray array = new JsonParser().parse(new JsonReader(new FileReader(chatGroups))).getAsJsonArray();
             Iterator<JsonElement> it = array.iterator();
-            while (it.hasNext()){
+            while (it.hasNext()) {
                 JsonObject object = it.next().getAsJsonObject();
                 ChatChannel.channels.add(new ChatChannel(object.get("name").getAsString(), object.get("tag").getAsString(),
                         object.get("radius").getAsInt(), object.get("default").getAsBoolean(), object.get("private").getAsBoolean(),
                         object.get("pass").getAsString()));
             }
-            ExtraChat.logger.info("Total channels: "+ChatChannel.channels.size());
+            ExtraChat.logger.info("Total channels: " + ChatChannel.channels.size());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public static void updateChatGroups(){
+    public static void updateChatGroups() {
         JsonArray array = new JsonArray();
-        for (ChatChannel chat : ChatChannel.channels){
+        for (ChatChannel chat : ChatChannel.channels) {
             JsonObject obj = new JsonObject();
             obj.addProperty("name", chat.getName());
-            obj.addProperty("tag",chat.getPass());
-            obj.addProperty("radius",chat.getRadius());
-            obj.addProperty("default",chat.isDefault());
-            obj.addProperty("private",chat.isPrivate());
-            obj.addProperty("pass",chat.getPass());
+            obj.addProperty("tag", chat.getPass());
+            obj.addProperty("radius", chat.getRadius());
+            obj.addProperty("default", chat.isDefault());
+            obj.addProperty("private", chat.isPrivate());
+            obj.addProperty("pass", chat.getPass());
             array.add(obj);
         }
+        writeJson(chatGroups, array);
+    }
+
+    public static void updateTags() {
+        JsonArray array = new JsonArray();
+        for (Tag t : Tag.tags) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("name", t.getName());
+            obj.addProperty("default", t.isDefault());
+            if (!t.isDefault()) {
+                JsonArray players = new JsonArray();
+                for (UUID id : t.getPlayers().keySet()) {
+                    JsonObject playerObj = new JsonObject();
+                    playerObj.addProperty("playerName", t.getPlayers().get(id));
+                    playerObj.addProperty("playerUUID", id.toString());
+                    players.add(playerObj);
+                }
+                obj.add("players", players);
+            }
+            array.add(obj);
+        }
+        writeJson(tagsjson, array);
+    }
+
+    private static void writeJson(File f, JsonElement element) {
         try {
-            FileOutputStream outputStream = new FileOutputStream(new File("config"+File.separator+"ExtraChat"+File.separator+"chatGroups.json"));
+            FileOutputStream outputStream = new FileOutputStream(f);
             Gson gs = new GsonBuilder().setPrettyPrinting().create();
-            outputStream.write(gs.toJson(array).getBytes());
+            outputStream.write(gs.toJson(element).getBytes());
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();

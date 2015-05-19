@@ -47,7 +47,7 @@ public class ExtraChat {
                 }
             }
         }
-        JsonLoader.initTagJson();
+        JsonLoader.initJson();
         event.getGame().getEventManager().register(pluginContainer.getInstance(), new PlayerChat());
         event.getGame().getEventManager().register(pluginContainer.getInstance(), new ChatLogger());
     }

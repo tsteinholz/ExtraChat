@@ -15,16 +15,18 @@ public class Tag {
                 return t;
             }
         }
-        Tag temp = new Tag(tag);
+        Tag temp = new Tag(tag, false);
         tags.add(temp);
         return temp;
     }
 
     private String name;
     private LinkedHashMap<UUID, String> players;
+    private boolean isDefault;
 
-    public Tag(String name) {
+    public Tag(String name, boolean isDefault) {
         this.name = name;
+        this.isDefault = isDefault;
         players = new LinkedHashMap<UUID, String>();
     }
 
@@ -34,5 +36,9 @@ public class Tag {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
     }
 }

@@ -30,10 +30,9 @@ public class ChatLogger {
 
     @Subscribe(order = Order.LAST)
     public void playerJoin(PlayerJoinEvent event) {
-        if (event.getNewMessage() != null){
+        if (event.getNewMessage() != null) {
             insertLine("[JOIN] " + Texts.toPlain(event.getNewMessage()));
-        }
-        else if (event.getMessage() != null){
+        } else if (event.getMessage() != null) {
             insertLine("[JOIN] " + Texts.toPlain(event.getMessage()));
         }
     }
@@ -54,9 +53,10 @@ public class ChatLogger {
         if (event.getNewMessage() != null) insertLine("[DEATH] " + Texts.toPlain(event.getNewMessage()));
         else if (event.getMessage() != null) insertLine("[DEATH] " + Texts.toPlain(event.getMessage()));
     }
+
     @Subscribe(order = Order.LAST)
     public void playerAchiev(AchievementEvent event) {
-       insertLine("[ACHIE] "+ "Player "+event.getEntity().getName()+" got the achievement "+event.getAchievement().getName());
+        insertLine("[ACHIE] " + "Player " + event.getEntity().getName() + " got the achievement " + event.getAchievement().getName());
     }
 
     private static PrintWriter createPrintWriter() throws IOException {

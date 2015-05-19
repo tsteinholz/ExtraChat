@@ -11,7 +11,7 @@ import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 
-public class PrivateMessage implements CommandExecutor{
+public class PrivateMessage implements CommandExecutor {
     private Game game;
 
     @Override
@@ -20,11 +20,11 @@ public class PrivateMessage implements CommandExecutor{
                 , args.<String>getOne("message").get(), src.getName(), args.<Player>getOne("playerDest").get().getName()));
         src.sendMessage(Format.formatPrivateMessage(ConfigLoader.privateMessageFormat
                 , args.<String>getOne("message").get(), src.getName(), args.<Player>getOne("playerDest").get().getName()));
-        ReplyPrivate.lastMessage.put(args.<Player>getOne("playerDest").get().getUniqueId(),game.getServer().getPlayer(src.getName()).get().getUniqueId());
+        ReplyPrivate.lastMessage.put(args.<Player>getOne("playerDest").get().getUniqueId(), game.getServer().getPlayer(src.getName()).get().getUniqueId());
         return CommandResult.success();
     }
 
-    public PrivateMessage(Game game){
+    public PrivateMessage(Game game) {
         this.game = game;
     }
 }

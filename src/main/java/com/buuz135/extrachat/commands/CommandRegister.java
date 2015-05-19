@@ -2,6 +2,11 @@ package com.buuz135.extrachat.commands;
 
 
 import com.buuz135.extrachat.broadcast.BRCommand;
+import com.buuz135.extrachat.commands.channels.Join;
+import com.buuz135.extrachat.commands.channels.Quit;
+import com.buuz135.extrachat.commands.channels.Talk;
+import com.buuz135.extrachat.commands.msg.PrivateMessage;
+import com.buuz135.extrachat.commands.msg.ReplyPrivate;
 import com.buuz135.extrachat.perms.PermsUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.text.Texts;
@@ -78,5 +83,24 @@ public class CommandRegister {
         game.getCommandDispatcher().register(plugin, show, "show");
         game.getCommandDispatcher().register(plugin, privateMes, "tell", "w", "msg");
         game.getCommandDispatcher().register(plugin, reply, "r", "reply");
+
+        //ChannelCommands
+        HashMap<List<String>, CommandSpec> channelSubcommands = new HashMap<List<String>, CommandSpec>();
+        CommandSpec talk = CommandSpec.builder().arguments(GenericArguments.string(Texts.of("channel"))).description(Texts.of("Used to switch channel."))
+                .executor(new Talk()).build();
+        CommandSpec join = CommandSpec.builder().arguments(GenericArguments.string(Texts.of("channel")),
+                GenericArguments.optionalWeak(GenericArguments.string(Texts.of("password")))).description(Texts.of("Used to join a channel."))
+                .executor(new Join()).build();
+        CommandSpec leave = CommandSpec.builder().arguments(GenericArguments.string(Texts.of("channel"))).description(Texts.of("Used to leave a channel."))
+                .executor(new Quit()).build();
+
+        channelSubcommands.put(Arrays.asList("talk","t"),talk);
+        channelSubcommands.put(Arrays.asList("join","j"),join);
+        channelSubcommands.put(Arrays.asList("quit","q","l","leave"),leave);
+
+
+        CommandSpec chmain = CommandSpec.builder().children(channelSubcommands).build();
+
+        game.getCommandDispatcher().register(plugin, chmain, "ch", "chat","channel");
     }
 }

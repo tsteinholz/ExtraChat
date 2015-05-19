@@ -1,11 +1,15 @@
 [
   {
     "broadcast": "Hi this is a broadcast, welcome to the server.",
-    "clickEvent":{
-      "openURL": "https:www.google.com",//Optional
-      "suggestCommand": "/me hi",//Optional
-      "runCommand": "/me dances"//Optional
+    "clickEvent": {
+      "openURL": "https:www.google.com",
+      //Optional
+      "suggestCommand": "/me hi",
+      //Optional
+      "runCommand": "/me dances"
+      //Optional
     },
-    "hoverText": "This texts shows up when hovering the broadcast"//Optional
+    "hoverText": "This texts shows up when hovering the broadcast"
+    //Optional
   }
 ]

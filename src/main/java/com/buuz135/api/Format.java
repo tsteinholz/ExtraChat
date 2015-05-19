@@ -45,4 +45,7 @@ public class Format {
         return colorString(format.replaceAll("%SENDER%", sender).replaceAll("%RECI%", reciever).replaceAll("%MES%", message));
     }
 
+    public static Text formatChannelTag(String format, String channelTag) {
+        return colorString(format.replaceAll("%TAG%", channelTag));
+    }
 }

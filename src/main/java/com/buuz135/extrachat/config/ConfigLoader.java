@@ -29,7 +29,9 @@ public class ConfigLoader {
     public static Text broadcastTag;
     public static boolean broadcastEnabled;
     public static String privateMessageFormat;
-    public static boolean areaChat;
+    public static boolean chatChannels;
+    public static String channelFormat;
+    public static boolean announce;
 
     public static void initConfiguration() {
         File folder = new File("config" + File.separator + "ExtraChat");
@@ -123,8 +125,12 @@ public class ConfigLoader {
                 format.getNode("chatChannel").getNode("enabled").setComment("Set to true to enable the chat groups");
                 format.getNode("chatChannel").getNode("chatTagFormat").setValue("[%TAG%]");
                 format.getNode("chatChannel").getNode("chatTagFormat").setComment("The format of the tag where %TAG% is the channel tag.");
+                format.getNode("chatChannel").getNode("announceChannelJoinOnPlayerJoin").setValue(false);
+                format.getNode("chatChannel").getNode("announceChannelJoinOnPlayerJoin").setComment("Set to true to announce when a player joins a default channel when he joins the game.");
             }
-
+            chatChannels = format.getNode("chatChannel").getNode("enabled").getBoolean();
+            announce = format.getNode("chatChannel").getNode("announceChannelJoinOnPlayerJoin").getBoolean();
+            channelFormat = format.getNode("chatChannel").getNode("chatTagFormat").getString();
             loader.save(format);
         } catch (IOException e) {
             ExtraChat.logger.error("Unable to load the configuration file.");

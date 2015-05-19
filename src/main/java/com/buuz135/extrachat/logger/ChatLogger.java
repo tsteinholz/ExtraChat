@@ -23,7 +23,7 @@ public class ChatLogger {
     public static PrintWriter writer;
     public static File fileTo;
 
-    @Subscribe(order = Order.LAST)
+    @Subscribe(order = Order.LAST,ignoreCancelled = false)
     public void playerChatLogger(PlayerChatEvent e) {
         insertLine(Texts.toPlain(e.getMessage()));
     }

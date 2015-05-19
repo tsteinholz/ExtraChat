@@ -7,6 +7,7 @@ import com.buuz135.extrachat.commands.CommandRegister;
 import com.buuz135.extrachat.config.ConfigLoader;
 import com.buuz135.extrachat.config.JsonLoader;
 import com.buuz135.extrachat.events.PlayerChat;
+import com.buuz135.extrachat.events.PlayerJoin;
 import com.buuz135.extrachat.logger.ChatLogger;
 import com.buuz135.extrachat.logger.ReplaceLogger;
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ public class ExtraChat {
         JsonLoader.initJson();
         event.getGame().getEventManager().register(pluginContainer.getInstance(), new PlayerChat());
         event.getGame().getEventManager().register(pluginContainer.getInstance(), new ChatLogger());
+        event.getGame().getEventManager().register(pluginContainer.getInstance(), new PlayerJoin());
     }
 
     @Subscribe

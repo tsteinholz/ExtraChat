@@ -1,9 +1,9 @@
 package com.buuz135.extrachat.config;
 
 
-import com.buuz135.extrachat.ChatChannel;
+import com.buuz135.api.ChatChannel;
+import com.buuz135.api.Tag;
 import com.buuz135.extrachat.ExtraChat;
-import com.buuz135.extrachat.Tag;
 import com.buuz135.extrachat.broadcast.Broadcaster;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
@@ -40,7 +40,7 @@ public class JsonLoader {
                 e.printStackTrace();
             }
         }
-        if (!chatGroups.exists()) {
+        if (!chatGroups.exists() && ConfigLoader.chatChannels) {
             try {
                 chatGroups.createNewFile();
                 ChatChannel.channels.add(new ChatChannel("global", "G", -1, true, false, ""));
@@ -49,8 +49,7 @@ public class JsonLoader {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        readChatGroups();
+        } else if(ConfigLoader.chatChannels) readChatGroups();
         readBroadcasts();
     }
 
@@ -110,9 +109,9 @@ public class JsonLoader {
         try {
             JsonArray array = new JsonParser().parse(new JsonReader(new FileReader(broadcastjson))).getAsJsonArray();
             Iterator<JsonElement> it = array.iterator();
-            while (it.hasNext()){
+            while (it.hasNext()) {
                 JsonObject obj = it.next().getAsJsonObject();
-                TextBuilder builder = Texts.fromLegacy(obj.get("broadcast").getAsString(),'&').builder();
+                TextBuilder builder = Texts.fromLegacy(obj.get("broadcast").getAsString(), '&').builder();
                 JsonObject event = obj.getAsJsonObject("clickEvent");
                 if (event.has("openURL")) {
                     builder.onClick(new ClickAction.OpenUrl(new URL(event.get("openURL").getAsString())));
@@ -123,8 +122,8 @@ public class JsonLoader {
                 if (event.has("runCommand")) {
                     builder.onClick(new ClickAction.RunCommand(event.get("runCommand").getAsString()));
                 }
-                if (obj.has("hoverText")){
-                    builder.onHover(new HoverAction.ShowText(Texts.fromLegacy(obj.get("hoverText").getAsString(),'&')));
+                if (obj.has("hoverText")) {
+                    builder.onHover(new HoverAction.ShowText(Texts.fromLegacy(obj.get("hoverText").getAsString(), '&')));
                 }
                 Broadcaster.broadcasts.add(builder.build());
             }
@@ -155,7 +154,7 @@ public class JsonLoader {
         for (ChatChannel chat : ChatChannel.channels) {
             JsonObject obj = new JsonObject();
             obj.addProperty("name", chat.getName());
-            obj.addProperty("tag", chat.getPass());
+            obj.addProperty("tag", chat.getTag());
             obj.addProperty("radius", chat.getRadius());
             obj.addProperty("default", chat.isDefault());
             obj.addProperty("private", chat.isPrivate());

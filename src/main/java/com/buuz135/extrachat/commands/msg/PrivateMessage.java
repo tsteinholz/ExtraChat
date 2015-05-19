@@ -1,4 +1,4 @@
-package com.buuz135.extrachat.commands;
+package com.buuz135.extrachat.commands.msg;
 
 
 import com.buuz135.api.Format;

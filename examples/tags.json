@@ -1,0 +1,21 @@
+[
+  {
+    "name": "NEW",
+    "default": true
+  },
+  {
+    "name": "Owner",
+    "default": false,
+    "players": [
+      {
+        "playerName": "Buuz135",
+        "playerUUID": "d28b7061-fb92-4064-90fb-7e02b95a72a6"
+      }
+    ]
+  },
+  {
+    "name": "Member",
+    "default": false,
+    "players": []
+  }
+]

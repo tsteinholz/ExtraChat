@@ -2,13 +2,12 @@ package com.buuz135.extrachat;
 
 
 import com.buuz135.api.ExtraMetrics;
-import com.buuz135.extrachat.broadcast.BRCommand;
 import com.buuz135.extrachat.broadcast.Broadcaster;
-import com.buuz135.extrachat.commands.ExtraChatCommand;
-import com.buuz135.extrachat.commands.ShowCommand;
+import com.buuz135.extrachat.commands.CommandRegister;
 import com.buuz135.extrachat.config.ConfigLoader;
 import com.buuz135.extrachat.config.JsonLoader;
 import com.buuz135.extrachat.events.PlayerChat;
+import com.buuz135.extrachat.events.PlayerJoin;
 import com.buuz135.extrachat.logger.ChatLogger;
 import com.buuz135.extrachat.logger.ReplaceLogger;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-@Plugin(id = "EC", name = "ExtraChat", version = "1.3")
+@Plugin(id = "EC", name = "ExtraChat", version = "1.4")
 public class ExtraChat {
     public static Logger logger;
     public static PluginContainer pluginContainer;
@@ -35,9 +34,7 @@ public class ExtraChat {
         pluginContainer = event.getGame().getPluginManager().getPlugin("EC").get();
         logger = event.getGame().getPluginManager().getLogger(pluginContainer);
         game = event.getGame();
-        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new ExtraChatCommand(), "ec", "extrachat");
-        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new BRCommand(), "br", "broadcast");
-        event.getGame().getCommandDispatcher().register(pluginContainer.getInstance(), new ShowCommand(), "show");
+        CommandRegister.registerCommands(game, pluginContainer.getInstance());
     }
 
     @Subscribe
@@ -51,9 +48,10 @@ public class ExtraChat {
                 }
             }
         }
-        JsonLoader.initTagJson();
+        JsonLoader.initJson();
         event.getGame().getEventManager().register(pluginContainer.getInstance(), new PlayerChat());
         event.getGame().getEventManager().register(pluginContainer.getInstance(), new ChatLogger());
+        event.getGame().getEventManager().register(pluginContainer.getInstance(), new PlayerJoin());
     }
 
     @Subscribe
@@ -74,7 +72,7 @@ public class ExtraChat {
     @Subscribe
     public void serverStart(ServerStartedEvent event) {
         try {
-            ExtraMetrics metrics = new ExtraMetrics("ExtraChat", "1.3", event.getGame());
+            ExtraMetrics metrics = new ExtraMetrics("ExtraChat", "1.4", event.getGame());
             metrics.start();
             if (!metrics.isOptOut()) {
                 logger.info("Metrics module enabled.");

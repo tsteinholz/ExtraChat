@@ -18,7 +18,7 @@ public class ExtraMetrics extends Metrics {
 
     @Override
     public String getFullServerVersion() {
-        return game.getMinecraftVersion().getName();
+        return "1.8";
     }
 
     @Override

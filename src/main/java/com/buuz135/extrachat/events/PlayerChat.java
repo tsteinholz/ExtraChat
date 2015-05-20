@@ -32,6 +32,9 @@ public class PlayerChat {
                 }
             }
         }
+        if (tag == null){
+            tag = "";
+        }
         if (!event.getEntity().getData(DisplayNameData.class).isPresent() ||
                 Texts.toPlain(event.getEntity().getData(DisplayNameData.class).get().getDisplayName()).equals("")) {
             name = event.getEntity().getName();
@@ -59,7 +62,6 @@ public class PlayerChat {
         ChatChannel c = ChatChannel.getChannelWrittingByPlayer(event.getEntity());
         for (UUID id : c.getPlayersListening()){
             if (event.getGame().getServer().getPlayer(id).isPresent()){
-                ExtraChat.logger.info(distance(event.getEntity().getLocation(),event.getGame().getServer().getPlayer(id).get().getLocation())+"");
                if (c.getRadius() == -1 || (event.getEntity().getWorld() == event.getGame().getServer().getPlayer(id).get().getWorld() &&
                distance(event.getEntity().getLocation(), event.getGame().getServer().getPlayer(id).get().getLocation())<=c.getRadius())){
                    event.getGame().getServer().getPlayer(id).get().sendMessage(Format.

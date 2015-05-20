@@ -128,8 +128,9 @@ public class JsonLoader {
                 Broadcaster.broadcasts.add(builder.build());
             }
         } catch (IOException e) {
-            ExtraChat.logger.warn("Broadcast json empty");
             e.printStackTrace();
+        }catch (IllegalStateException e2) {
+            ExtraChat.logger.info("Broadcasts Json Empty");
         }
     }
 

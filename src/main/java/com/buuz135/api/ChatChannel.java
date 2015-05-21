@@ -77,7 +77,7 @@ public class ChatChannel {
                 if (c.getPlayersListening().contains(player.getUniqueId())) {
                     c.getPlayersListening().remove(player.getUniqueId());
                     player.sendMessage(Texts.of(TextColors.YELLOW, "You left the " + c.getName() + " channel."));
-                    for (UUID id : c.getPlayersListening()){
+                    for (UUID id : c.getPlayersListening()) {
                         game.getServer().getPlayer(id).get().sendMessage(Texts.of(TextColors.GOLD,
                                 Format.formatChannelTag(ConfigLoader.channelFormat, c.getTag()), " Player " + player.getName() + " left the channel."));
                     }

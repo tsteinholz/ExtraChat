@@ -4,7 +4,7 @@ package com.buuz135.extrachat.events;
 import com.buuz135.api.ChatChannel;
 import com.buuz135.api.Format;
 import com.buuz135.api.Tag;
-import com.buuz135.extrachat.ExtraChat;
+import com.buuz135.api.blacklist.BlacklistedWord;
 import com.buuz135.extrachat.config.ConfigLoader;
 import org.spongepowered.api.data.manipulator.DisplayNameData;
 import org.spongepowered.api.event.Order;
@@ -32,7 +32,7 @@ public class PlayerChat {
                 }
             }
         }
-        if (tag == null){
+        if (tag == null) {
             tag = "";
         }
         if (!event.getEntity().getData(DisplayNameData.class).isPresent() ||
@@ -46,31 +46,30 @@ public class PlayerChat {
         if (ConfigLoader.style == 2) {
             style = "@#*%&";
         }
-        mess = Format.blacklistWords(mess, ConfigLoader.blacklisted, style);
-        if (Format.getRawMessage(Texts.toPlain(event.getMessage())).startsWith("r/") && ConfigLoader.replaceEnabled) {
-            ExtraChat.replaceLogger.fixMsg(event.getEntity().getName(), Format.getRawMessage(Texts.toLegacy(event.getMessage(), '&')));
-            event.setCancelled(true);
-        } else {
-            ExtraChat.replaceLogger.insertLog(event.getEntity().getName(), Format.getRawMessage(Texts.toLegacy(event.getMessage(), '&')));
-            event.setNewMessage(Format.colorString("&r" + tag + mess));
-        }
+        event.setNewMessage(Format.colorString("&r" + tag + mess));
         event.setCancelled(ConfigLoader.chatChannels);
+        for (BlacklistedWord word : BlacklistedWord.blacklistedWordList){
+            word.execute(event);
+        }
     }
+
     @Subscribe(order = Order.POST, ignoreCancelled = false)
-    public void onChannelChat(PlayerChatEvent event){
+    public void onChannelChat(PlayerChatEvent event) {
+        if (Texts.toPlain(event.getNewMessage()).equals("")) return;
         if (!ConfigLoader.chatChannels) return;
         ChatChannel c = ChatChannel.getChannelWrittingByPlayer(event.getEntity());
-        for (UUID id : c.getPlayersListening()){
-            if (event.getGame().getServer().getPlayer(id).isPresent()){
-               if (c.getRadius() == -1 || (event.getEntity().getWorld() == event.getGame().getServer().getPlayer(id).get().getWorld() &&
-               distance(event.getEntity().getLocation(), event.getGame().getServer().getPlayer(id).get().getLocation())<=c.getRadius())){
-                   event.getGame().getServer().getPlayer(id).get().sendMessage(Format.
-                           formatChannelTag(ConfigLoader.channelFormat,c.getTag()).builder().append(event.getNewMessage()).build());
-               }
+        for (UUID id : c.getPlayersListening()) {
+            if (event.getGame().getServer().getPlayer(id).isPresent()) {
+                if (c.getRadius() == -1 || (event.getEntity().getWorld() == event.getGame().getServer().getPlayer(id).get().getWorld() &&
+                        distance(event.getEntity().getLocation(), event.getGame().getServer().getPlayer(id).get().getLocation()) <= c.getRadius())) {
+                    event.getGame().getServer().getPlayer(id).get().sendMessage(Format.
+                            formatChannelTag(ConfigLoader.channelFormat, c.getTag()).builder().append(event.getNewMessage()).build());
+                }
             }
         }
     }
-    private double distance(Location loc1, Location loc2){
-        return Math.sqrt(Math.pow(loc1.getX()-loc2.getX(),2) + Math.pow(loc1.getY()- loc2.getY(),2)+Math.pow(loc1.getZ()-loc2.getZ(),2));
+
+    private double distance(Location loc1, Location loc2) {
+        return Math.sqrt(Math.pow(loc1.getX() - loc2.getX(), 2) + Math.pow(loc1.getY() - loc2.getY(), 2) + Math.pow(loc1.getZ() - loc2.getZ(), 2));
     }
 }

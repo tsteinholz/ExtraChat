@@ -23,8 +23,6 @@ public class ConfigLoader {
     public static int style;
     public static boolean loggerEnabled;
     public static String loggerPath;
-    public static int replaceInt;
-    public static boolean replaceEnabled;
     public static int broadcastTime;
     public static Text broadcastTag;
     public static boolean broadcastEnabled;
@@ -87,16 +85,6 @@ public class ConfigLoader {
             if (loggerPath == null) {
                 format.getNode("log").getNode("destination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
                 loggerPath = format.getNode("log").getNode("destination").getString();
-            }
-            replaceEnabled = format.getNode("wordReplacer").getNode("enabled").getBoolean();
-            if (!format.getNode("wordReplacer").getNode("enabled").getComment().isPresent()) {
-                format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
-                replaceEnabled = format.getNode("wordReplacer").getNode("enabled").getBoolean();
-            }
-            replaceInt = format.getNode("wordReplacer").getNode("size").getInt();
-            if (replaceInt == 0) {
-                format.getNode("wordReplacer").getNode("size").setComment("The amount of chat messages back you can fix.").setValue(10);
-                replaceInt = format.getNode("wordReplacer").getNode("size").getInt();
             }
             broadcastTime = format.getNode("broadcaster").getNode("time").getInt();
             if (broadcastTime == 0) {
@@ -185,19 +173,6 @@ public class ConfigLoader {
         }
     }
 
-    public static void toggleReplace() {
-        replaceEnabled = !replaceEnabled;
-        File file = new File("config" + File.separator + "ExtraChat" + File.separator + "config.conf");
-        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
-        CommentedConfigurationNode format = null;
-        try {
-            loader.createEmptyNode(ConfigurationOptions.defaults());
-            format = loader.load();
-            format.getNode("wordReplacer").getNode("enabled").setValue(replaceEnabled);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void removeWordFromBlackList(String word) {
         ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config" + File.separator + "ExtraChat" + File.separator + "config.conf")).build();

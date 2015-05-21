@@ -12,7 +12,7 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 public class Talk implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        ChatChannel.setWrittingChannel(ExtraChat.game.getServer().getPlayer(src.getName()).get(),args.<String>getOne("channel").get());
+        ChatChannel.setWrittingChannel(ExtraChat.game.getServer().getPlayer(src.getName()).get(), args.<String>getOne("channel").get());
         return CommandResult.success();
     }
 }

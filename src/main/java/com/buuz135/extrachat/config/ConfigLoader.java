@@ -17,7 +17,6 @@ public class ConfigLoader {
 
     public static String formatMes;
     public static String formatTag;
-    public static int style;
     public static boolean loggerEnabled;
     public static String loggerPath;
     public static int broadcastTime;
@@ -58,11 +57,6 @@ public class ConfigLoader {
             if (formatTag == null) {
                 format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.").setValue("%TAG% ");
                 formatTag = format.getNode("formatTag").getString();
-            }
-            style = format.getNode("blacklist").getNode("style").getInt();
-            if (style == 0) {
-                format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'").setValue("1");
-                style = format.getNode("blacklist").getNode("style").getInt();
             }
             loggerEnabled = format.getNode("log").getNode("enabled").getBoolean();
             if (!format.getNode("log").getNode("enabled").getComment().isPresent()) {

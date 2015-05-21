@@ -42,13 +42,9 @@ public class PlayerChat {
             name = Texts.toLegacy(event.getEntity().getData(DisplayNameData.class).get().getDisplayName(), '&');
         }
         String mess = Format.formatMessageToString(ConfigLoader.formatMes, name, Format.getRawMessage(Texts.toLegacy(event.getMessage(), '&')));
-        String style = "*";
-        if (ConfigLoader.style == 2) {
-            style = "@#*%&";
-        }
         event.setNewMessage(Format.colorString("&r" + tag + mess));
         event.setCancelled(ConfigLoader.chatChannels);
-        for (BlacklistedWord word : BlacklistedWord.blacklistedWordList){
+        for (BlacklistedWord word : BlacklistedWord.blacklistedWordList) {
             word.execute(event);
         }
     }

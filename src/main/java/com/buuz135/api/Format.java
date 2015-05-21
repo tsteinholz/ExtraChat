@@ -1,10 +1,10 @@
 package com.buuz135.api;
 
 
+import com.buuz135.extrachat.ExtraChat;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 
-import java.util.List;
 import java.util.Random;
 
 public class Format {
@@ -22,14 +22,8 @@ public class Format {
         return Texts.fromLegacy(mess, '&');
     }
 
-    public static String blacklistWords(String msg, List<String> blacklisted, String style) {
-        for (String b : blacklisted) {
-            msg = msg.replaceAll(b, createBlacklistedString(b.length(), style));
-        }
-        return msg;
-    }
 
-    private static String createBlacklistedString(int size, String customStyle) {
+    public static String createBlacklistedString(int size, String customStyle) {
         String dot = "";
         for (int i = 0; i < size; ++i) {
             dot = dot + getRandomChar(customStyle);
@@ -38,7 +32,9 @@ public class Format {
     }
 
     private static char getRandomChar(String s) {
-        return s.charAt(rn.nextInt(s.length()));
+        char c = s.charAt(rn.nextInt(s.length()));
+        ExtraChat.logger.info(c+"");
+        return c;
     }
 
     public static Text formatPrivateMessage(String format, String message, String sender, String reciever) {

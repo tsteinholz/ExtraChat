@@ -1,0 +1,40 @@
+[
+    {
+        "regex": "n[^a]gg+(a|er|uh)", //A regex filter or a word
+        "action":{
+            "type": "KICK", //The action type as shown below
+            "cancel": "true", //To make not to show in chat
+            "alert": "%PLAYER% has been kicked for racism.", // The alert shown to the rest of the players, remove it to don't alert players
+            "kick": "You have been kicked for racism." //The kick message that will show to a player
+        }
+    },
+    {
+        "regex": "poop",
+        "action":{
+            "type": "COLOR", //Adding a color to a word, to make it hard to read for example
+            "color": "&6poop" //the colored word
+        }
+    },
+    {
+        "regex": "lag",
+        "action":{
+            "type": "REPLACE", //Replace the regex/word with a random selected word from below
+            "replaceWords":[ //A list of words to be replaced with
+                {
+                    "word": "potato"
+                },
+                {
+                    "word": "nice"
+                }
+            ]
+        }
+    },
+    {
+        "regex": "article",
+        "action": {
+            "type": "STRIKEOUT",//Replace the word with a random string selected selected from the characters in the style
+            "style": "*%@#" //Style of the word when its replaced it can be anything except % and &
+        }
+    }
+]
+            

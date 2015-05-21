@@ -213,6 +213,18 @@ public class JsonLoader {
                     Boolean cancel = action.get("cancel").getAsBoolean();
                     String kick = action.get("kick").getAsString();
                     BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(kick, wordAction, regex, cancel, alert));
+                } else if (wordAction == WordAction.COLOR) {
+                    String color = action.get("color").getAsString();
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(color, wordAction, regex, false, null));
+                } else if (wordAction == WordAction.REPLACE) {
+                    Iterator<JsonElement> it2 = action.getAsJsonArray("replaceWords").iterator();
+                    BlacklistedWord bl = new BlacklistedWord(null, wordAction, regex, false, null);
+                    while (it2.hasNext()) {
+                        bl.getWordsReplace().add(it2.next().getAsJsonObject().get("word").getAsString());
+                    }
+                    BlacklistedWord.blacklistedWordList.add(bl);
+                } else if (wordAction == WordAction.STRIKEOUT){
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(action.get("style").getAsString(),wordAction,regex,false,null));
                 }
             }
         } catch (FileNotFoundException e) {

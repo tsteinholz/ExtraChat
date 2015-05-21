@@ -1,7 +1,6 @@
 package com.buuz135.api;
 
 
-import com.buuz135.extrachat.ExtraChat;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 
@@ -33,7 +32,6 @@ public class Format {
 
     private static char getRandomChar(String s) {
         char c = s.charAt(rn.nextInt(s.length()));
-        ExtraChat.logger.info(c+"");
         return c;
     }
 

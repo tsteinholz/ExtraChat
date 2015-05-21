@@ -9,11 +9,11 @@ import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 
-public class Join implements CommandExecutor{
+public class Join implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        ChatChannel.setPlayerListening(ExtraChat.game.getServer().getPlayer(src.getName()).get(),args.<String>getOne("channel").get(),
-                args.<String>getOne("password"),ExtraChat.game);
+        ChatChannel.setPlayerListening(ExtraChat.game.getServer().getPlayer(src.getName()).get(), args.<String>getOne("channel").get(),
+                args.<String>getOne("password"), ExtraChat.game);
         return CommandResult.success();
     }
 }

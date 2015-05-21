@@ -3,6 +3,8 @@ package com.buuz135.extrachat.config;
 
 import com.buuz135.api.ChatChannel;
 import com.buuz135.api.Tag;
+import com.buuz135.api.blacklist.BlacklistedWord;
+import com.buuz135.api.blacklist.WordAction;
 import com.buuz135.extrachat.ExtraChat;
 import com.buuz135.extrachat.broadcast.Broadcaster;
 import com.google.gson.*;
@@ -23,34 +25,32 @@ public class JsonLoader {
     private static File tagsjson = new File(path + "tags.json");
     private static File broadcastjson = new File(path + "broadcasts.json");
     private static File chatGroups = new File(path + "chatGroups.json");
+    private static File blacklistjson = new File(path + "blacklist.json");
 
     public static void initJson() {
-        if (!tagsjson.exists()) {
-            try {
+        try {
+            if (!tagsjson.exists()) {
                 tagsjson.createNewFile();
-            } catch (IOException e) {
-                ExtraChat.logger.error("Error creating the tags file.");
             }
-        }
-        readTagsJson();
-        if (!broadcastjson.exists()) {
-            try {
+            readTagsJson();
+            if (!broadcastjson.exists()) {
                 broadcastjson.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-        if (!chatGroups.exists() && ConfigLoader.chatChannels) {
-            try {
+            readBroadcasts();
+            if (!chatGroups.exists() && ConfigLoader.chatChannels) {
                 chatGroups.createNewFile();
                 ChatChannel.channels.add(new ChatChannel("global", "G", -1, true, false, ""));
                 ChatChannel.channels.add(new ChatChannel("local", "L", 200, true, false, ""));
                 updateChatGroups();
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            } else if (ConfigLoader.chatChannels) readChatGroups();
+            if (!blacklistjson.exists()) {
+                blacklistjson.createNewFile();
             }
-        } else if(ConfigLoader.chatChannels) readChatGroups();
-        readBroadcasts();
+            readBlacklist();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void insertTag(String tag, String name, String UUID) {
@@ -129,7 +129,7 @@ public class JsonLoader {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }catch (IllegalStateException e2) {
+        } catch (IllegalStateException e2) {
             ExtraChat.logger.info("Broadcasts Json Empty");
         }
     }
@@ -144,7 +144,6 @@ public class JsonLoader {
                         object.get("radius").getAsInt(), object.get("default").getAsBoolean(), object.get("private").getAsBoolean(),
                         object.get("pass").getAsString()));
             }
-            ExtraChat.logger.info("Total channels: " + ChatChannel.channels.size());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -194,6 +193,44 @@ public class JsonLoader {
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void readBlacklist() {
+        try {
+            JsonArray array = new JsonParser().parse(new JsonReader(new FileReader(blacklistjson))).getAsJsonArray();
+            Iterator<JsonElement> it = array.iterator();
+            while (it.hasNext()) {
+                JsonObject object = it.next().getAsJsonObject();
+                String regex = object.get("regex").getAsString();
+                JsonObject action = object.getAsJsonObject("action");
+                //String privateMes = null;
+                //if (object.has("privateMessage")) privateMes = object.get("privateMessage").getAsString();
+                WordAction wordAction = WordAction.fromString(action.get("type").getAsString());
+                if (wordAction == WordAction.KICK) {
+                    String alert = null;
+                    if (action.has("alert")) alert = action.get("alert").getAsString();
+                    Boolean cancel = action.get("cancel").getAsBoolean();
+                    String kick = action.get("kick").getAsString();
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(kick, wordAction, regex, cancel, alert));
+                } else if (wordAction == WordAction.COLOR) {
+                    String color = action.get("color").getAsString();
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(color, wordAction, regex, false, null));
+                } else if (wordAction == WordAction.REPLACE) {
+                    Iterator<JsonElement> it2 = action.getAsJsonArray("replaceWords").iterator();
+                    BlacklistedWord bl = new BlacklistedWord(null, wordAction, regex, false, null);
+                    while (it2.hasNext()) {
+                        bl.getWordsReplace().add(it2.next().getAsJsonObject().get("word").getAsString());
+                    }
+                    BlacklistedWord.blacklistedWordList.add(bl);
+                } else if (wordAction == WordAction.STRIKEOUT){
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(action.get("style").getAsString(),wordAction,regex,false,null));
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e2) {
+            ExtraChat.logger.info("Blacklist Json Empty");
         }
     }
 }

@@ -46,8 +46,7 @@ public class CommandRegister {
                 .arguments(GenericArguments.remainingJoinedStrings(Texts.of("format"))).build();
         CommandSpec togglelog = CommandSpec.builder().description(Texts.of(TextColors.GOLD,
                 "Toggles the log.")).executor(new ToggleLog()).permission(PermsUtils.TOGGLELOG).build();
-        CommandSpec togglereplace = CommandSpec.builder().description(Texts.of(TextColors.GOLD,
-                "Toggles the place function.")).executor(new ToggleReplace()).permission(PermsUtils.TOGGLEREPLACE).build();
+
 
         subcommands.put(Arrays.asList("reload"), reload);
         subcommands.put(Arrays.asList("help"), help);
@@ -56,7 +55,7 @@ public class CommandRegister {
         subcommands.put(Arrays.asList("tagremove"), tagremove);
         subcommands.put(Arrays.asList("formattag"), formattag);
         subcommands.put(Arrays.asList("togglelog"), togglelog);
-        subcommands.put(Arrays.asList("togglereplace"), togglereplace);
+
 
         CommandSpec main = CommandSpec.builder().description(Texts.of(TextColors.GOLD,
                 "Main ExtraChat command.")).permission(PermsUtils.MAIN).executor(new CommandExecutor() {
@@ -94,13 +93,13 @@ public class CommandRegister {
         CommandSpec leave = CommandSpec.builder().arguments(GenericArguments.string(Texts.of("channel"))).description(Texts.of("Used to leave a channel."))
                 .executor(new Quit()).build();
 
-        channelSubcommands.put(Arrays.asList("talk","t"),talk);
-        channelSubcommands.put(Arrays.asList("join","j"),join);
-        channelSubcommands.put(Arrays.asList("quit","q","l","leave"),leave);
+        channelSubcommands.put(Arrays.asList("talk", "t"), talk);
+        channelSubcommands.put(Arrays.asList("join", "j"), join);
+        channelSubcommands.put(Arrays.asList("quit", "q", "l", "leave"), leave);
 
 
         CommandSpec chmain = CommandSpec.builder().children(channelSubcommands).build();
 
-        game.getCommandDispatcher().register(plugin, chmain, "ch", "chat","channel");
+        game.getCommandDispatcher().register(plugin, chmain, "ch", "chat", "channel");
     }
 }

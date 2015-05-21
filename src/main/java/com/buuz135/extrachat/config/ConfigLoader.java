@@ -11,20 +11,14 @@ import org.spongepowered.api.text.Texts;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ConfigLoader {
     //format="&a[&3%PLAYER%&a] &c&l>> "
 
     public static String formatMes;
     public static String formatTag;
-    public static List<String> blacklisted;
-    public static int style;
     public static boolean loggerEnabled;
     public static String loggerPath;
-    public static int replaceInt;
-    public static boolean replaceEnabled;
     public static int broadcastTime;
     public static Text broadcastTag;
     public static boolean broadcastEnabled;
@@ -64,20 +58,6 @@ public class ConfigLoader {
                 format.getNode("formatTag").setComment("Format of the tag where %TAG% is the tag.").setValue("%TAG% ");
                 formatTag = format.getNode("formatTag").getString();
             }
-            style = format.getNode("blacklist").getNode("style").getInt();
-            if (style == 0) {
-                format.getNode("blacklist").getNode("style").setComment("Define the blacklist style: 1. '****', 2.  '@#%&'").setValue("1");
-                style = format.getNode("blacklist").getNode("style").getInt();
-            }
-            String words = format.getNode("blacklist").getNode("words").getString();
-            if (words == null) {
-                format.getNode("blacklist").getNode("words").setComment("Blacklisted words in this format 'word-word' without ''").setValue("lag");
-                words = format.getNode("blacklist").getNode("words").getString();
-            }
-            blacklisted = new ArrayList<String>();
-            for (String s : words.split("-")) {
-                blacklisted.add(s);
-            }
             loggerEnabled = format.getNode("log").getNode("enabled").getBoolean();
             if (!format.getNode("log").getNode("enabled").getComment().isPresent()) {
                 format.getNode("log").getNode("enabled").setComment("Set to true to enable the chat logger, default true.").setValue(true);
@@ -87,16 +67,6 @@ public class ConfigLoader {
             if (loggerPath == null) {
                 format.getNode("log").getNode("destination").setComment("Define the path of the log, default chatlog").setValue("chatlog");
                 loggerPath = format.getNode("log").getNode("destination").getString();
-            }
-            replaceEnabled = format.getNode("wordReplacer").getNode("enabled").getBoolean();
-            if (!format.getNode("wordReplacer").getNode("enabled").getComment().isPresent()) {
-                format.getNode("wordReplacer").getNode("enabled").setComment("Set to true to enable the word replacer.").setValue(true);
-                replaceEnabled = format.getNode("wordReplacer").getNode("enabled").getBoolean();
-            }
-            replaceInt = format.getNode("wordReplacer").getNode("size").getInt();
-            if (replaceInt == 0) {
-                format.getNode("wordReplacer").getNode("size").setComment("The amount of chat messages back you can fix.").setValue(10);
-                replaceInt = format.getNode("wordReplacer").getNode("size").getInt();
             }
             broadcastTime = format.getNode("broadcaster").getNode("time").getInt();
             if (broadcastTime == 0) {
@@ -156,21 +126,6 @@ public class ConfigLoader {
         }
     }
 
-
-    public static void addWordtoBlackList(String word) {
-        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config" + File.separator + "ExtraChat" + File.separator + "config.conf")).build();
-        CommentedConfigurationNode format = null;
-        try {
-            loader.createEmptyNode(ConfigurationOptions.defaults());
-            format = loader.load();
-            format.getNode("blacklist").setValue(format.getNode("blacklist").getValue().toString() + word + ",");
-            blacklisted.add(word);
-            loader.save(format);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void toggleLog() {
         loggerEnabled = !loggerEnabled;
         File file = new File("config" + File.separator + "ExtraChat" + File.separator + "config.conf");
@@ -185,40 +140,4 @@ public class ConfigLoader {
         }
     }
 
-    public static void toggleReplace() {
-        replaceEnabled = !replaceEnabled;
-        File file = new File("config" + File.separator + "ExtraChat" + File.separator + "config.conf");
-        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(file).build();
-        CommentedConfigurationNode format = null;
-        try {
-            loader.createEmptyNode(ConfigurationOptions.defaults());
-            format = loader.load();
-            format.getNode("wordReplacer").getNode("enabled").setValue(replaceEnabled);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void removeWordFromBlackList(String word) {
-        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().setFile(new File("config" + File.separator + "ExtraChat" + File.separator + "config.conf")).build();
-        CommentedConfigurationNode format = null;
-        try {
-            loader.createEmptyNode(ConfigurationOptions.defaults());
-            format = loader.load();
-            ExtraChat.logger.info(word);
-            String temp = "";
-            for (String s : blacklisted) {
-                if (s != null && !s.equals(word)) {
-                    temp = temp + s + ",";
-                }
-            }
-            format.getNode("blacklist").setValue(temp);
-            if (blacklisted.contains(word)) {
-                blacklisted.remove(word);
-            }
-            loader.save(format);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

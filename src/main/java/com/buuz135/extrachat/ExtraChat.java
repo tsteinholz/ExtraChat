@@ -9,7 +9,6 @@ import com.buuz135.extrachat.config.JsonLoader;
 import com.buuz135.extrachat.events.PlayerChat;
 import com.buuz135.extrachat.events.PlayerJoin;
 import com.buuz135.extrachat.logger.ChatLogger;
-import com.buuz135.extrachat.logger.ReplaceLogger;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
@@ -26,7 +25,6 @@ public class ExtraChat {
     public static Logger logger;
     public static PluginContainer pluginContainer;
     public static Game game;
-    public static ReplaceLogger replaceLogger;
 
 
     @Subscribe
@@ -56,7 +54,6 @@ public class ExtraChat {
 
     @Subscribe
     public void postInit(final PostInitializationEvent event) {
-        replaceLogger = new ReplaceLogger();
         Broadcaster.startBroadcastTask();
     }
 

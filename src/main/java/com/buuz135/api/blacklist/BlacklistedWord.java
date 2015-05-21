@@ -2,7 +2,6 @@ package com.buuz135.api.blacklist;
 
 
 import com.buuz135.api.Format;
-import com.buuz135.extrachat.ExtraChat;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
 import org.spongepowered.api.text.Texts;
 
@@ -77,7 +76,6 @@ public class BlacklistedWord {
             event.setNewMessage(Texts.fromLegacy(Texts.toLegacy(event.getNewMessage(), '&').replaceAll(regexFilter, privateMessage), '&'));
         }
         if (action.equals(WordAction.REPLACE)) {
-            ExtraChat.logger.info("REPLACE");
             Random rn = new Random();
             event.setNewMessage(Texts.fromLegacy(Texts.toLegacy(event.getNewMessage(), '&').replaceAll(regexFilter, wordsReplace.get(rn.nextInt(wordsReplace.size()))), '&'));
         }

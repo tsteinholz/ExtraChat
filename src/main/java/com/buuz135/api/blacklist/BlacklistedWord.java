@@ -67,7 +67,7 @@ public class BlacklistedWord {
             if (!Texts.toPlain(event.getNewMessage()).replaceAll(actualFilter, "").equals(Texts.toPlain(event.getNewMessage()))) {
                 if (action.equals(WordAction.KICK)) {
                     event.setCancelled(cancel);
-                    event.setNewMessage(Texts.of(""));
+                    if (cancel) event.setNewMessage(Texts.of(""));
                     if (alert != null) {
                         event.getGame().getServer().broadcastMessage(Texts.fromLegacy(alert.replaceAll("%PLAYER%", event.getEntity().getName()), '&'));
                     }
@@ -83,6 +83,12 @@ public class BlacklistedWord {
                 if (action.equals(WordAction.STRIKEOUT)) {
                     String filter = Format.createBlacklistedString(Texts.toPlain(event.getNewMessage()).length() - Texts.toPlain(event.getNewMessage()).replaceAll(actualFilter, "").length(), privateMessage);
                     event.setNewMessage(Texts.fromLegacy(Texts.toLegacy(event.getNewMessage(), '&').replaceAll(actualFilter, filter), '&'));
+                }
+                if (action.equals(WordAction.COMMAND)){
+                    event.setCancelled(cancel);
+                    if (cancel) event.setNewMessage(Texts.of(""));
+                    if (privateMessage != null)event.getEntity().sendMessage(Texts.fromLegacy(privateMessage,'&'));
+                    event.getGame().getCommandDispatcher().process(event.getGame().getServer().getConsole(), alert.replaceAll("%PLAYER%",event.getEntity().getName()));
                 }
             }
         }

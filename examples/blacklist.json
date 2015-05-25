@@ -1,31 +1,31 @@
 [
     [
         {
-            "regex": "n[^a]gg+(a|er|uh)",
+            "regex": "n[^a]gg+(a|er|uh)",//A regex filter or a word
             "action":{
-                "type": "KICK",
-                "cancel": "true",
-                "alert": "%PLAYER% has been kicked for racism.",
-                "kick": "You have been kicked for racism."
+                "type": "KICK",//The action type as shown below
+                "cancel": "true", //To make the current message not to show in chat
+                "alert": "%PLAYER% has been kicked for racism.", // The alert shown to the rest of the players, remove it to don't alert players
+                "kick": "You have been kicked for racism."//The kick message that will show to a player
             }
         },
         {
             "regex": "poop",
             "action":{
-                "type": "COLOR",
-                "color": "&6poop"
+                "type": "COLOR",//Adding a color to a word, to make it hard to read for example
+                "color": "&6poop"//the colored word
             }
         },
         {
-            "regex": [
-                    "lag",
-                    "noob",
-                    "test",
-                    "A"
-                ],
+            "regex": [ //More than one regex filter
+                "lag",
+                "noob",
+                "test",
+                "A"
+            ],
             "action":{
-                "type": "REPLACE",
-                "replaceWords":[
+                "type": "REPLACE",//Replace the regex/word with a random selected word from below
+                "replaceWords":[//A list of words to be replaced with
                     "potato",
                     "nice"
                 ]
@@ -34,15 +34,24 @@
         {
             "regex": "article",
             "action": {
-                "type": "STRIKEOUT",
-                "style": "*%@#"
+                "type": "STRIKEOUT",//Replace the word with a random string selected selected from the characters in the style
+                "style": "*%@#"//Style of the word when its replaced it can be anything except % and &
+            }
+        },
+        {
+            "regex": "command",
+            "action": {
+                "type": "COMMAND", //Execute a command when the phrase has the filter
+                "cancel": "true",
+                "private": "Don't say that!",
+                "command": "say Player %PLAYER% said something wrong!"
             }
         }
     ],
-    [
+    [ //Variables, the variable name will replace the regex filters
         {
-            "variable": "A",
-            "value": "variable"
+            "variable": "A", //Name of the variable
+            "value": "thisisavalue" //Value of the variable
         }
     ]
 ]

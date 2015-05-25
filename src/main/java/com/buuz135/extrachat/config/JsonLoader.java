@@ -234,6 +234,10 @@ public class JsonLoader {
                     BlacklistedWord.blacklistedWordList.add(bl);
                 } else if (wordAction == WordAction.STRIKEOUT){
                     BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(action.get("style").getAsString(),wordAction,regex,false,null));
+                } else if (wordAction == WordAction.COMMAND){
+                    String privateMes = null;
+                    if (action.has("private")) privateMes = action.get("private").getAsString();
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(privateMes,wordAction,regex,action.get("cancel").getAsBoolean(),action.get("command").getAsString()));
                 }
             }
             Iterator<JsonElement> variables = main.next().getAsJsonArray().iterator();

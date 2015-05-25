@@ -14,13 +14,13 @@ public class BlacklistedWord {
     public static List<BlacklistedWord> blacklistedWordList = new ArrayList<BlacklistedWord>();
 
     private List<String> wordsReplace;
-    private String regexFilter;
+    private List<String> regexFilter;
     private WordAction action;
     private String privateMessage;
     private boolean cancel;
     private String alert;
 
-    public BlacklistedWord(String privateMessage, WordAction action, String regexFilter, boolean cancel, String alert) {
+    public BlacklistedWord(String privateMessage, WordAction action, List<String> regexFilter, boolean cancel, String alert) {
         this.privateMessage = privateMessage;
         this.action = action;
         this.cancel = cancel;
@@ -33,13 +33,6 @@ public class BlacklistedWord {
         return privateMessage != null;
     }
 
-    public String getRegexFilter() {
-        return regexFilter;
-    }
-
-    public void setRegexFilter(String regexFilter) {
-        this.regexFilter = regexFilter;
-    }
 
     public WordAction getAction() {
         return action;
@@ -57,31 +50,47 @@ public class BlacklistedWord {
         this.privateMessage = privateMessage;
     }
 
+    public List<String> getRegexFilter() {
+        return regexFilter;
+    }
+
+    public void setRegexFilter(List<String> regexFilter) {
+        this.regexFilter = regexFilter;
+    }
+
     public List<String> getWordsReplace() {
         return wordsReplace;
     }
 
     public void execute(PlayerChatEvent event) {
-        if (Texts.toPlain(event.getNewMessage()).replaceAll(regexFilter, "").equals(Texts.toPlain(event.getNewMessage())))
-        return;
-        if (action.equals(WordAction.KICK)) {
-            event.setCancelled(cancel);
-            event.setNewMessage(Texts.of(""));
-            if (alert != null) {
-                event.getGame().getServer().broadcastMessage(Texts.fromLegacy(alert.replaceAll("%PLAYER%", event.getEntity().getName()), '&'));
+        for (String actualFilter : regexFilter) {
+            if (!Texts.toPlain(event.getNewMessage()).replaceAll(actualFilter, "").equals(Texts.toPlain(event.getNewMessage()))) {
+                if (action.equals(WordAction.KICK)) {
+                    event.setCancelled(cancel);
+                    if (cancel) event.setNewMessage(Texts.of(""));
+                    if (alert != null) {
+                        event.getGame().getServer().broadcastMessage(Texts.fromLegacy(alert.replaceAll("%PLAYER%", event.getEntity().getName()), '&'));
+                    }
+                    event.getGame().getCommandDispatcher().process(event.getGame().getServer().getConsole(), "kick " + event.getEntity().getName() + " " + privateMessage);//TODO Implement when implemented
+                }
+                if (action.equals(WordAction.COLOR)) {
+                    event.setNewMessage(Texts.fromLegacy(Texts.toLegacy(event.getNewMessage(), '&').replaceAll(actualFilter, privateMessage), '&'));
+                }
+                if (action.equals(WordAction.REPLACE)) {
+                    Random rn = new Random();
+                    event.setNewMessage(Texts.fromLegacy(Texts.toLegacy(event.getNewMessage(), '&').replaceAll(actualFilter, wordsReplace.get(rn.nextInt(wordsReplace.size()))), '&'));
+                }
+                if (action.equals(WordAction.STRIKEOUT)) {
+                    String filter = Format.createBlacklistedString(Texts.toPlain(event.getNewMessage()).length() - Texts.toPlain(event.getNewMessage()).replaceAll(actualFilter, "").length(), privateMessage);
+                    event.setNewMessage(Texts.fromLegacy(Texts.toLegacy(event.getNewMessage(), '&').replaceAll(actualFilter, filter), '&'));
+                }
+                if (action.equals(WordAction.COMMAND)){
+                    event.setCancelled(cancel);
+                    if (cancel) event.setNewMessage(Texts.of(""));
+                    if (privateMessage != null)event.getEntity().sendMessage(Texts.fromLegacy(privateMessage,'&'));
+                    event.getGame().getCommandDispatcher().process(event.getGame().getServer().getConsole(), alert.replaceAll("%PLAYER%",event.getEntity().getName()));
+                }
             }
-            event.getGame().getCommandDispatcher().process(event.getGame().getServer().getConsole(), "kick " + event.getEntity().getName() + " " + privateMessage);//TODO Implement when implemented
-        }
-        if (action.equals(WordAction.COLOR)) {
-            event.setNewMessage(Texts.fromLegacy(Texts.toLegacy(event.getNewMessage(), '&').replaceAll(regexFilter, privateMessage), '&'));
-        }
-        if (action.equals(WordAction.REPLACE)) {
-            Random rn = new Random();
-            event.setNewMessage(Texts.fromLegacy(Texts.toLegacy(event.getNewMessage(), '&').replaceAll(regexFilter, wordsReplace.get(rn.nextInt(wordsReplace.size()))), '&'));
-        }
-        if (action.equals(WordAction.STRIKEOUT)){
-            String filter = Format.createBlacklistedString(Texts.toPlain(event.getNewMessage()).length() - Texts.toPlain(event.getNewMessage()).replaceAll(regexFilter, "").length(), privateMessage);
-            event.setNewMessage(Texts.fromLegacy(Texts.toLegacy(event.getNewMessage(), '&').replaceAll(regexFilter, filter), '&'));
         }
     }
 }

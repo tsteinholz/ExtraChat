@@ -17,7 +17,9 @@ import org.spongepowered.api.text.action.HoverAction;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 public class JsonLoader {
@@ -199,13 +201,20 @@ public class JsonLoader {
     private static void readBlacklist() {
         try {
             JsonArray array = new JsonParser().parse(new JsonReader(new FileReader(blacklistjson))).getAsJsonArray();
-            Iterator<JsonElement> it = array.iterator();
+            Iterator<JsonElement> main = array.iterator();
+            Iterator<JsonElement> it = main.next().getAsJsonArray().iterator();
             while (it.hasNext()) {
                 JsonObject object = it.next().getAsJsonObject();
-                String regex = object.get("regex").getAsString();
+                List<String> regex = new ArrayList<String>();
+                if (object.get("regex").isJsonArray()){
+                    Iterator<JsonElement> regexIt = object.get("regex").getAsJsonArray().iterator();
+                    while (regexIt.hasNext()){
+                        regex.add(regexIt.next().getAsString());
+                    }
+                }else{
+                    regex.add(object.get("regex").getAsString());
+                }
                 JsonObject action = object.getAsJsonObject("action");
-                //String privateMes = null;
-                //if (object.has("privateMessage")) privateMes = object.get("privateMessage").getAsString();
                 WordAction wordAction = WordAction.fromString(action.get("type").getAsString());
                 if (wordAction == WordAction.KICK) {
                     String alert = null;
@@ -220,11 +229,26 @@ public class JsonLoader {
                     Iterator<JsonElement> it2 = action.getAsJsonArray("replaceWords").iterator();
                     BlacklistedWord bl = new BlacklistedWord(null, wordAction, regex, false, null);
                     while (it2.hasNext()) {
-                        bl.getWordsReplace().add(it2.next().getAsJsonObject().get("word").getAsString());
+                        bl.getWordsReplace().add(it2.next().getAsString());
                     }
                     BlacklistedWord.blacklistedWordList.add(bl);
                 } else if (wordAction == WordAction.STRIKEOUT){
                     BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(action.get("style").getAsString(),wordAction,regex,false,null));
+                } else if (wordAction == WordAction.COMMAND){
+                    String privateMes = null;
+                    if (action.has("private")) privateMes = action.get("private").getAsString();
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(privateMes,wordAction,regex,action.get("cancel").getAsBoolean(),action.get("command").getAsString()));
+                }
+            }
+            Iterator<JsonElement> variables = main.next().getAsJsonArray().iterator();
+            while (variables.hasNext()){
+                JsonObject var = variables.next().getAsJsonObject();
+                for (BlacklistedWord bl : BlacklistedWord.blacklistedWordList){
+                    List<String> filteredRegex = new ArrayList<String>();
+                    for (String temp : bl.getRegexFilter()){
+                        filteredRegex.add(temp.replaceAll(var.get("variable").getAsString(),var.get("value").getAsString()));
+                    }
+                    bl.setRegexFilter(filteredRegex);
                 }
             }
         } catch (FileNotFoundException e) {

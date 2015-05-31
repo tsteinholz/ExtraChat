@@ -14,8 +14,11 @@ public class ToggleLog implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         ConfigLoader.toggleLog();
-        src.sendMessage(Texts.of(TextColors.BLUE, "[", TextColors.DARK_AQUA, "EC", TextColors.BLUE, "] ",
-                TextColors.GREEN, "Toggled the log."));
+        if (ConfigLoader.loggerEnabled)
+            src.sendMessage(Texts.of(TextColors.BLUE, "[", TextColors.DARK_AQUA, "EC", TextColors.BLUE, "] ",
+                    TextColors.GREEN, "The log is now enabled."));
+        else src.sendMessage(Texts.of(TextColors.BLUE, "[", TextColors.DARK_AQUA, "EC", TextColors.BLUE, "] ",
+                TextColors.GREEN, "The log is now disabled."));
         return CommandResult.success();
     }
 }

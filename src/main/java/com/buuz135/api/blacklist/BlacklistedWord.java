@@ -69,7 +69,7 @@ public class BlacklistedWord {
                     event.setCancelled(cancel);
                     if (cancel) event.setNewMessage(Texts.of(""));
                     if (alert != null) {
-                        event.getGame().getServer().broadcastMessage(Texts.fromLegacy(alert.replaceAll("%PLAYER%", event.getEntity().getName()), '&'));
+                        event.getGame().getServer().getBroadcastSink().sendMessage(Texts.fromLegacy(alert.replaceAll("%PLAYER%", event.getEntity().getName()), '&'));
                     }
                     event.getGame().getCommandDispatcher().process(event.getGame().getServer().getConsole(), "kick " + event.getEntity().getName() + " " + privateMessage);//TODO Implement when implemented
                 }

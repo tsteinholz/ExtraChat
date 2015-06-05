@@ -21,7 +21,7 @@ public class Broadcaster {
             @Override
             public void run() {
                 if (ExtraChat.game.getServer().getOnlinePlayers().size() == 0 || broadcasts.size() == 0) return;
-                ExtraChat.game.getServer().broadcastMessage(ConfigLoader.broadcastTag.builder()
+                ExtraChat.game.getServer().getBroadcastSink().sendMessage(ConfigLoader.broadcastTag.builder()
                         .append(broadcasts.get(rn.nextInt(broadcasts.size()))).build());
             }
         }, ConfigLoader.broadcastTime).get();

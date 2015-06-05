@@ -14,7 +14,7 @@ public class BRCommand implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        ExtraChat.game.getServer().broadcastMessage(ConfigLoader.broadcastTag.builder().append(Texts.fromLegacy(args.<String>getOne("broadcast").get(), '&')).build());
+        ExtraChat.game.getServer().getBroadcastSink().sendMessage(ConfigLoader.broadcastTag.builder().append(Texts.fromLegacy(args.<String>getOne("broadcast").get(), '&')).build());
         return CommandResult.success();
     }
 }

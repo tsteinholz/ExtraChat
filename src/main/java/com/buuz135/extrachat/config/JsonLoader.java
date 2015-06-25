@@ -14,6 +14,7 @@ import org.spongepowered.api.text.TextBuilder;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.ClickAction;
 import org.spongepowered.api.text.action.HoverAction;
+import org.spongepowered.api.util.TextMessageException;
 
 import java.io.*;
 import java.net.URL;
@@ -38,7 +39,11 @@ public class JsonLoader {
             if (!broadcastjson.exists()) {
                 broadcastjson.createNewFile();
             }
-            readBroadcasts();
+            try {
+                readBroadcasts();
+            } catch (TextMessageException e) {
+                e.printStackTrace();
+            }
             if (!chatGroups.exists() && ConfigLoader.chatChannels) {
                 chatGroups.createNewFile();
                 ChatChannel.channels.add(new ChatChannel("global", "G", -1, true, false, ""));
@@ -107,13 +112,13 @@ public class JsonLoader {
         updateTags();
     }
 
-    public static void readBroadcasts() {
+    public static void readBroadcasts() throws TextMessageException {
         try {
             JsonArray array = new JsonParser().parse(new JsonReader(new FileReader(broadcastjson))).getAsJsonArray();
             Iterator<JsonElement> it = array.iterator();
             while (it.hasNext()) {
                 JsonObject obj = it.next().getAsJsonObject();
-                TextBuilder builder = Texts.fromLegacy(obj.get("broadcast").getAsString(), '&').builder();
+                TextBuilder builder = Texts.legacy().from(obj.get("broadcast").getAsString().replaceAll("&", "" + Texts.getLegacyChar())).builder();
                 JsonObject event = obj.getAsJsonObject("clickEvent");
                 if (event.has("openURL")) {
                     builder.onClick(new ClickAction.OpenUrl(new URL(event.get("openURL").getAsString())));
@@ -125,7 +130,7 @@ public class JsonLoader {
                     builder.onClick(new ClickAction.RunCommand(event.get("runCommand").getAsString()));
                 }
                 if (obj.has("hoverText")) {
-                    builder.onHover(new HoverAction.ShowText(Texts.fromLegacy(obj.get("hoverText").getAsString(), '&')));
+                    builder.onHover(new HoverAction.ShowText(Texts.legacy().from(obj.get("hoverText").getAsString().replaceAll("&", "" + Texts.getLegacyChar()))));
                 }
                 Broadcaster.broadcasts.add(builder.build());
             }

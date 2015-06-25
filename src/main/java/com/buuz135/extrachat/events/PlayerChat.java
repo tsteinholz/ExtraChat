@@ -11,6 +11,7 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.util.TextMessageException;
 import org.spongepowered.api.world.Location;
 
 import java.util.UUID;
@@ -39,13 +40,17 @@ public class PlayerChat {
                 Texts.toPlain(event.getEntity().getData(DisplayNameData.class).get().getDisplayName()).equals("")) {
             name = event.getEntity().getName();
         } else if (event.getEntity().getData(DisplayNameData.class).isPresent()) {
-            name = Texts.toLegacy(event.getEntity().getData(DisplayNameData.class).get().getDisplayName(), '&');
+            name = Texts.legacy().to(event.getEntity().getData(DisplayNameData.class).get().getDisplayName());
         }
-        String mess = Format.formatMessageToString(ConfigLoader.formatMes, name, Format.getRawMessage(Texts.toLegacy(event.getMessage(), '&')));
+        String mess = Format.formatMessageToString(ConfigLoader.formatMes, name, Format.getRawMessage(Texts.legacy().to(event.getMessage())));
         event.setNewMessage(Format.colorString("&r" + tag + mess));
         event.setCancelled(ConfigLoader.chatChannels);
         for (BlacklistedWord word : BlacklistedWord.blacklistedWordList) {
-            word.execute(event);
+            try {
+                word.execute(event);
+            } catch (TextMessageException e) {
+                e.printStackTrace();
+            }
         }
     }
 

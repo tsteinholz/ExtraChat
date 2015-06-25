@@ -4,6 +4,7 @@ package com.buuz135.extrachat.broadcast;
 import com.buuz135.extrachat.ExtraChat;
 import com.buuz135.extrachat.config.ConfigLoader;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.util.TextMessageException;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
@@ -14,7 +15,11 @@ public class BRCommand implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        ExtraChat.game.getServer().getBroadcastSink().sendMessage(ConfigLoader.broadcastTag.builder().append(Texts.fromLegacy(args.<String>getOne("broadcast").get(), '&')).build());
+        try {
+            ExtraChat.game.getServer().getBroadcastSink().sendMessage(ConfigLoader.broadcastTag.builder().append(Texts.legacy().from(args.<String>getOne("broadcast").get().replaceAll("&", "" + Texts.getLegacyChar()))).build());
+        } catch (TextMessageException e) {
+            e.printStackTrace();
+        }
         return CommandResult.success();
     }
 }

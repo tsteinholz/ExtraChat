@@ -3,6 +3,7 @@ package com.buuz135.api;
 
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.util.TextMessageException;
 
 import java.util.Random;
 
@@ -18,7 +19,12 @@ public class Format {
     }
 
     public static Text colorString(String mess) {
-        return Texts.fromLegacy(mess, '&');
+        try {
+            return Texts.legacy().from(mess.replaceAll("&", "" + Texts.getLegacyChar()));
+        } catch (TextMessageException e) {
+            e.printStackTrace();
+        }
+        return  null;
     }
 
 

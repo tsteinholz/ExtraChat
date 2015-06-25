@@ -17,13 +17,13 @@ public class Broadcaster {
     public static void startBroadcastTask() {
         final Random rn = new Random();
         if (!ConfigLoader.broadcastEnabled) return;
-        task = ExtraChat.game.getSyncScheduler().runRepeatingTask(ExtraChat.pluginContainer.getInstance(), new Runnable() {
+        task = ExtraChat.game.getScheduler().getTaskBuilder().interval(ConfigLoader.broadcastTime).execute(new Runnable() {
             @Override
             public void run() {
                 if (ExtraChat.game.getServer().getOnlinePlayers().size() == 0 || broadcasts.size() == 0) return;
                 ExtraChat.game.getServer().getBroadcastSink().sendMessage(ConfigLoader.broadcastTag.builder()
                         .append(broadcasts.get(rn.nextInt(broadcasts.size()))).build());
             }
-        }, ConfigLoader.broadcastTime).get();
+        }).submit(ExtraChat.pluginContainer);
     }
 }

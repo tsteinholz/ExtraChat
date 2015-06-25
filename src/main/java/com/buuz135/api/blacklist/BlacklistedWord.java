@@ -9,6 +9,7 @@ import org.spongepowered.api.util.TextMessageException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 public class BlacklistedWord {
 
@@ -65,7 +66,7 @@ public class BlacklistedWord {
 
     public void execute(PlayerChatEvent event) throws TextMessageException {
         for (String actualFilter : regexFilter) {
-            if (!Texts.toPlain(event.getNewMessage()).replaceAll(actualFilter, "").equals(Texts.toPlain(event.getNewMessage()))) {
+            if (Pattern.compile(actualFilter, Pattern.CASE_INSENSITIVE).matcher(Texts.toPlain(event.getNewMessage())).find()) {
                 if (action.equals(WordAction.KICK)) {
                     event.setCancelled(cancel);
                     if (cancel) event.setNewMessage(Texts.of(""));

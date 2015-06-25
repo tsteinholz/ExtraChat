@@ -24,7 +24,7 @@ public class Format {
         } catch (TextMessageException e) {
             e.printStackTrace();
         }
-        return  null;
+        return null;
     }
 
 

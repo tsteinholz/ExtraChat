@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class JsonLoader {
     private static String path = "config" + File.separator + "ExtraChat" + File.separator;
@@ -213,12 +211,12 @@ public class JsonLoader {
             while (it.hasNext()) {
                 JsonObject object = it.next().getAsJsonObject();
                 List<String> regex = new ArrayList<String>();
-                if (object.get("regex").isJsonArray()){
+                if (object.get("regex").isJsonArray()) {
                     Iterator<JsonElement> regexIt = object.get("regex").getAsJsonArray().iterator();
-                    while (regexIt.hasNext()){
+                    while (regexIt.hasNext()) {
                         regex.add(regexIt.next().getAsString());
                     }
-                }else{
+                } else {
                     regex.add(object.get("regex").getAsString());
                 }
                 JsonObject action = object.getAsJsonObject("action");
@@ -239,21 +237,21 @@ public class JsonLoader {
                         bl.getWordsReplace().add(it2.next().getAsString());
                     }
                     BlacklistedWord.blacklistedWordList.add(bl);
-                } else if (wordAction == WordAction.STRIKEOUT){
-                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(action.get("style").getAsString(),wordAction,regex,false,null));
-                } else if (wordAction == WordAction.COMMAND){
+                } else if (wordAction == WordAction.STRIKEOUT) {
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(action.get("style").getAsString(), wordAction, regex, false, null));
+                } else if (wordAction == WordAction.COMMAND) {
                     String privateMes = null;
                     if (action.has("private")) privateMes = action.get("private").getAsString();
-                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(privateMes,wordAction,regex,action.get("cancel").getAsBoolean(),action.get("command").getAsString()));
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(privateMes, wordAction, regex, action.get("cancel").getAsBoolean(), action.get("command").getAsString()));
                 }
             }
             Iterator<JsonElement> variables = main.next().getAsJsonArray().iterator();
-            while (variables.hasNext()){
+            while (variables.hasNext()) {
                 JsonObject var = variables.next().getAsJsonObject();
-                for (BlacklistedWord bl : BlacklistedWord.blacklistedWordList){
+                for (BlacklistedWord bl : BlacklistedWord.blacklistedWordList) {
                     List<String> filteredRegex = new ArrayList<String>();
-                    for (String temp : bl.getRegexFilter()){
-                        filteredRegex.add(temp.replaceAll(var.get("variable").getAsString(),var.get("value").getAsString()));
+                    for (String temp : bl.getRegexFilter()) {
+                        filteredRegex.add(temp.replaceAll(var.get("variable").getAsString(), var.get("value").getAsString()));
                     }
                     bl.setRegexFilter(filteredRegex);
                 }

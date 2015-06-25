@@ -76,7 +76,7 @@ public class BlacklistedWord {
                     event.getGame().getCommandDispatcher().process(event.getGame().getServer().getConsole(), "kick " + event.getEntity().getName() + " " + privateMessage);//TODO Implement when implemented
                 }
                 if (action.equals(WordAction.COLOR)) {
-                    event.setNewMessage(Texts.legacy().from(Texts.legacy().to(event.getNewMessage()).replaceAll(actualFilter, privateMessage).replaceAll("&",""+Texts.getLegacyChar())));
+                    event.setNewMessage(Texts.legacy().from(Texts.legacy().to(event.getNewMessage()).replaceAll(actualFilter, privateMessage).replaceAll("&", "" + Texts.getLegacyChar())));
                 }
                 if (action.equals(WordAction.REPLACE)) {
                     Random rn = new Random();
@@ -86,11 +86,11 @@ public class BlacklistedWord {
                     String filter = Format.createBlacklistedString(Texts.toPlain(event.getNewMessage()).length() - Texts.toPlain(event.getNewMessage()).replaceAll(actualFilter, "").length(), privateMessage);
                     event.setNewMessage(Texts.legacy().from(Texts.legacy().to(event.getNewMessage()).replaceAll(actualFilter, filter)));
                 }
-                if (action.equals(WordAction.COMMAND)){
+                if (action.equals(WordAction.COMMAND)) {
                     event.setCancelled(cancel);
                     if (cancel) event.setNewMessage(Texts.of(""));
-                    if (privateMessage != null)event.getEntity().sendMessage(Texts.legacy().from(privateMessage));
-                    event.getGame().getCommandDispatcher().process(event.getGame().getServer().getConsole(), alert.replaceAll("%PLAYER%",event.getEntity().getName()));
+                    if (privateMessage != null) event.getEntity().sendMessage(Texts.legacy().from(privateMessage));
+                    event.getGame().getCommandDispatcher().process(event.getGame().getServer().getConsole(), alert.replaceAll("%PLAYER%", event.getEntity().getName()));
                 }
             }
         }

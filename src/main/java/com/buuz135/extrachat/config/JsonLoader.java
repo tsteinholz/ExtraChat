@@ -14,6 +14,7 @@ import org.spongepowered.api.text.TextBuilder;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.ClickAction;
 import org.spongepowered.api.text.action.HoverAction;
+import org.spongepowered.api.util.TextMessageException;
 
 import java.io.*;
 import java.net.URL;
@@ -38,7 +39,11 @@ public class JsonLoader {
             if (!broadcastjson.exists()) {
                 broadcastjson.createNewFile();
             }
-            readBroadcasts();
+            try {
+                readBroadcasts();
+            } catch (TextMessageException e) {
+                e.printStackTrace();
+            }
             if (!chatGroups.exists() && ConfigLoader.chatChannels) {
                 chatGroups.createNewFile();
                 ChatChannel.channels.add(new ChatChannel("global", "G", -1, true, false, ""));
@@ -107,13 +112,13 @@ public class JsonLoader {
         updateTags();
     }
 
-    public static void readBroadcasts() {
+    public static void readBroadcasts() throws TextMessageException {
         try {
             JsonArray array = new JsonParser().parse(new JsonReader(new FileReader(broadcastjson))).getAsJsonArray();
             Iterator<JsonElement> it = array.iterator();
             while (it.hasNext()) {
                 JsonObject obj = it.next().getAsJsonObject();
-                TextBuilder builder = Texts.fromLegacy(obj.get("broadcast").getAsString(), '&').builder();
+                TextBuilder builder = Texts.legacy().from(obj.get("broadcast").getAsString().replaceAll("&", "" + Texts.getLegacyChar())).builder();
                 JsonObject event = obj.getAsJsonObject("clickEvent");
                 if (event.has("openURL")) {
                     builder.onClick(new ClickAction.OpenUrl(new URL(event.get("openURL").getAsString())));
@@ -125,7 +130,7 @@ public class JsonLoader {
                     builder.onClick(new ClickAction.RunCommand(event.get("runCommand").getAsString()));
                 }
                 if (obj.has("hoverText")) {
-                    builder.onHover(new HoverAction.ShowText(Texts.fromLegacy(obj.get("hoverText").getAsString(), '&')));
+                    builder.onHover(new HoverAction.ShowText(Texts.legacy().from(obj.get("hoverText").getAsString().replaceAll("&", "" + Texts.getLegacyChar()))));
                 }
                 Broadcaster.broadcasts.add(builder.build());
             }
@@ -206,12 +211,12 @@ public class JsonLoader {
             while (it.hasNext()) {
                 JsonObject object = it.next().getAsJsonObject();
                 List<String> regex = new ArrayList<String>();
-                if (object.get("regex").isJsonArray()){
+                if (object.get("regex").isJsonArray()) {
                     Iterator<JsonElement> regexIt = object.get("regex").getAsJsonArray().iterator();
-                    while (regexIt.hasNext()){
+                    while (regexIt.hasNext()) {
                         regex.add(regexIt.next().getAsString());
                     }
-                }else{
+                } else {
                     regex.add(object.get("regex").getAsString());
                 }
                 JsonObject action = object.getAsJsonObject("action");
@@ -232,25 +237,26 @@ public class JsonLoader {
                         bl.getWordsReplace().add(it2.next().getAsString());
                     }
                     BlacklistedWord.blacklistedWordList.add(bl);
-                } else if (wordAction == WordAction.STRIKEOUT){
-                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(action.get("style").getAsString(),wordAction,regex,false,null));
-                } else if (wordAction == WordAction.COMMAND){
+                } else if (wordAction == WordAction.STRIKEOUT) {
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(action.get("style").getAsString(), wordAction, regex, false, null));
+                } else if (wordAction == WordAction.COMMAND) {
                     String privateMes = null;
                     if (action.has("private")) privateMes = action.get("private").getAsString();
-                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(privateMes,wordAction,regex,action.get("cancel").getAsBoolean(),action.get("command").getAsString()));
+                    BlacklistedWord.blacklistedWordList.add(new BlacklistedWord(privateMes, wordAction, regex, action.get("cancel").getAsBoolean(), action.get("command").getAsString()));
                 }
             }
             Iterator<JsonElement> variables = main.next().getAsJsonArray().iterator();
-            while (variables.hasNext()){
+            while (variables.hasNext()) {
                 JsonObject var = variables.next().getAsJsonObject();
-                for (BlacklistedWord bl : BlacklistedWord.blacklistedWordList){
+                for (BlacklistedWord bl : BlacklistedWord.blacklistedWordList) {
                     List<String> filteredRegex = new ArrayList<String>();
-                    for (String temp : bl.getRegexFilter()){
-                        filteredRegex.add(temp.replaceAll(var.get("variable").getAsString(),var.get("value").getAsString()));
+                    for (String temp : bl.getRegexFilter()) {
+                        filteredRegex.add(temp.replaceAll(var.get("variable").getAsString(), var.get("value").getAsString()));
                     }
                     bl.setRegexFilter(filteredRegex);
                 }
             }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IllegalStateException e2) {

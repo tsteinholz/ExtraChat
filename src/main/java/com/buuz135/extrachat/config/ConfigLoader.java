@@ -8,6 +8,7 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.util.TextMessageException;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,7 +83,11 @@ public class ConfigLoader {
             if (formatBR == null) {
                 format.getNode("broadcaster").getNode("format").setComment("Format of the tag that will show in front of the broadcast.").setValue(" &7[&4!&7] ");
             }
-            broadcastTag = Texts.fromLegacy(format.getNode("broadcaster").getNode("format").getString(), '&');
+            try {
+                broadcastTag = Texts.legacy().from(format.getNode("broadcaster").getNode("format").getString().replaceAll("&", "" + Texts.getLegacyChar()));
+            } catch (TextMessageException e) {
+                e.printStackTrace();
+            }
             privateMessageFormat = format.getNode("privateMessage").getNode("format").getString();
             if (privateMessageFormat == null) {
                 format.getNode("privateMessage").getNode("format").setComment("Format of the private message where %SENDER%" +

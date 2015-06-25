@@ -2,7 +2,7 @@ package com.buuz135.api.blacklist;
 
 
 public enum WordAction {
-    KICK, COLOR, REPLACE, STRIKEOUT,COMMAND;
+    KICK, COLOR, REPLACE, STRIKEOUT, COMMAND;
 
     public static WordAction fromString(String action) {
         if (action.equalsIgnoreCase(KICK.toString())) {

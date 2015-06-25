@@ -47,7 +47,7 @@ public class ChatChannel {
     public static void setPlayerListening(Player player, String channel, Optional<String> pass, Game game) {
         for (ChatChannel c : channels) {
             if (c.getName().equalsIgnoreCase(channel) || c.getTag().equalsIgnoreCase(channel)) {
-                if (c.getPlayersWritting().contains(player.getUniqueId())) {
+                if (c.getPlayersListening().contains(player.getUniqueId())) {
                     player.sendMessage(Texts.of(TextColors.DARK_RED, "You are already in this channel."));
                     return;
                 }

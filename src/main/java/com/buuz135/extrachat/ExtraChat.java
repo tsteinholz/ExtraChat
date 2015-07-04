@@ -22,18 +22,10 @@ import java.io.IOException;
 
 @Plugin(id = "EC", name = "ExtraChat", version = "1.4")
 public class ExtraChat {
-    public static Logger logger;
-    public static PluginContainer pluginContainer;
-    public static Game game;
 
-
-    @Subscribe
-    public void preInit(PreInitializationEvent event) {
-        pluginContainer = event.getGame().getPluginManager().getPlugin("EC").get();
-        logger = event.getGame().getPluginManager().getLogger(pluginContainer);
-        game = event.getGame();
-        CommandRegister.registerCommands(game, pluginContainer.getInstance());
-    }
+    @Inject public static Logger logger;
+    @Inject public static PluginContainer pluginContainer;
+    @Inject public static Game game;
 
     @Subscribe
     public void init(InitializationEvent event) {
